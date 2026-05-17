@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Cinco Panes v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C8922A;--gold-l:#E8B84B;--gold-p:#FDF3E3;
+  --brown:#1C1208;--brown-m:#3D2B0E;
+  --cream:#FAF6EF;--cream-d:#F0E8D8;
+  --g:#2D6A4F;--gl:#D8F3DC;
+  --r:#A63228;--rl:#FDECEA;
+  --am:#D4811A;--aml:#FEF3DC;
+  --tx:#1C1208;--txm:#A08060;--txs:#6B4423;
+  --bd:rgba(200,146,42,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--tx);min-height:100vh;font-size:14px;}
+
+/* LOADING */
+#pg-load{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--brown);}
+.load-logo{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold-l);text-align:center;font-weight:700;}
+.load-sub{font-size:11px;color:var(--txm);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-top:6px;}
+
+/* LOGIN */
+#pg-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--brown);background-image:radial-gradient(ellipse at 25% 20%,rgba(200,146,42,0.18) 0%,transparent 55%),radial-gradient(ellipse at 75% 80%,rgba(61,43,14,.5) 0%,transparent 55%);}
+.lbox{background:var(--brown-m);border:1px solid rgba(200,146,42,.3);border-radius:22px;padding:44px 38px;width:100%;max-width:400px;}
+.llogo{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold-l);text-align:center;margin-bottom:2px;}
+.ltag{text-align:center;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--txm);margin-bottom:28px;}
+.lr{margin-bottom:13px;}
+.lr label{display:block;font-size:11px;font-weight:500;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.lr input,.lr select{width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(200,146,42,.22);border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.lr input:focus,.lr select:focus{border-color:var(--gold);}
+.lr input::placeholder{color:rgba(255,255,255,.22);}
+.lr select option{background:var(--brown-m);color:#fff;}
+.lbtn{width:100%;padding:12px;background:var(--gold);border:none;border-radius:10px;color:var(--brown);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:5px;}
+.lbtn:hover{background:var(--gold-l);}
+.lerr{margin-top:9px;padding:9px;background:rgba(166,50,40,.18);border:1px solid rgba(166,50,40,.35);border-radius:8px;color:#FF9B8A;font-size:12px;text-align:center;display:none;}
+
+/* APP */
+#pg-app{display:none;min-height:100vh;flex-direction:column;}
+.topbar{background:var(--brown);border-bottom:1px solid rgba(200,146,42,.18);padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tbrand{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold-l);}
+.tright{display:flex;align-items:center;gap:10px;}
+.syncd{width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;}
+.syncd.syn{background:var(--am);animation:pulse 1s infinite;}
+.syncd.err{background:var(--r);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.tav{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brown);flex-shrink:0;}
+.tname{font-size:12px;color:#fff;font-weight:500;}
+.trole{font-size:10px;padding:1px 7px;border-radius:20px;font-weight:500;text-transform:uppercase;}
+.ro{background:rgba(200,146,42,.22);color:var(--gold-l);}
+.rm{background:rgba(45,106,79,.28);color:#74C69D;}
+.rw{background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);}
+.tout{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:4px 9px;color:rgba(255,255,255,.55);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.tout:hover{background:rgba(255,255,255,.13);color:#fff;}
+
+/* NAV */
+.nav{background:var(--brown-m);border-bottom:1px solid var(--bd);display:flex;padding:0 14px;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nb{padding:11px 12px;background:none;border:none;border-bottom:2px solid transparent;color:var(--txm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.nb:hover{color:var(--gold);}
+.nb.act{color:var(--gold-l);border-bottom-color:var(--gold);}
+
+/* CONTENT */
+.content{padding:16px;max-width:1100px;margin:0 auto;width:100%;flex:1;}
+.pg{display:none;}.pg.act{display:block;}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--bd);border-radius:15px;padding:18px;margin-bottom:13px;}
+.ct{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--brown);margin-bottom:13px;display:flex;align-items:center;gap:8px;}
+.ci{width:28px;height:28px;border-radius:7px;background:var(--gold-p);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:9px;margin-bottom:14px;}
+.sc{background:#fff;border:1px solid var(--bd);border-radius:13px;padding:13px;}
+.slbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--txm);margin-bottom:3px;}
+.sval{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--brown);}
+.ssub{font-size:11px;color:var(--txm);margin-top:1px;}
+
+/* STOCK ITEMS */
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px;}
+.si{background:var(--cream);border:1px solid var(--bd);border-radius:11px;padding:11px 13px;position:relative;}
+.siname{font-size:11px;font-weight:500;color:var(--tx);margin-bottom:4px;padding-right:20px;line-height:1.3;}
+.siamt{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+.siunit{font-size:11px;font-weight:400;}
+.sibar{height:3px;border-radius:2px;background:var(--cream-d);margin-top:7px;overflow:hidden;}
+.sifill{height:100%;border-radius:2px;transition:width .4s;}
+.sok .siamt{color:var(--g);}.sok .sifill{background:var(--g);}
+.slow .siamt{color:var(--am);}.slow .sifill{background:var(--am);}
+.scrit .siamt{color:var(--r);}.scrit .sifill{background:var(--r);}
+.sempty .siamt{color:#bbb;}.sempty .sifill{background:#ddd;}
+.sdot{width:7px;height:7px;border-radius:50%;position:absolute;top:11px;right:11px;}
+.sok .sdot{background:var(--g);}.slow .sdot{background:var(--am);}
+.scrit .sdot{background:var(--r);box-shadow:0 0 0 3px rgba(166,50,40,.15);}
+.sempty .sdot{background:#ccc;}
+.avg-badge{display:block;font-size:9px;font-weight:600;color:var(--am);margin-top:3px;}
+.del-x{position:absolute;top:7px;right:7px;width:17px;height:17px;border-radius:50%;background:var(--rl);border:none;color:var(--r);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;}
+
+/* ALERTS */
+.alert{padding:9px 13px;border-radius:9px;font-size:12px;margin-bottom:7px;line-height:1.5;}
+.ared{background:var(--rl);color:var(--r);border:1px solid rgba(166,50,40,.18);}
+.aamb{background:var(--aml);color:var(--am);border:1px solid rgba(212,129,26,.18);}
+.agrn{background:var(--gl);color:var(--g);border:1px solid rgba(45,106,79,.18);}
+
+/* BUTTONS */
+.btn{padding:8px 15px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:4px;}
+.bp{background:var(--gold);color:var(--brown);}.bp:hover{background:var(--gold-l);}
+.bo{background:transparent;border:1px solid var(--bd);color:var(--txs);}.bo:hover{border-color:var(--gold);color:var(--gold);}
+.bd2{background:var(--rl);color:var(--r);border:1px solid rgba(166,50,40,.18);}
+.bg2{background:var(--gl);color:var(--g);border:1px solid rgba(45,106,79,.18);}
+.bsm{padding:5px 9px;font-size:11px;}
+
+/* FORMS */
+.fg{margin-bottom:11px;}
+.fg label{display:block;font-size:11px;font-weight:500;color:var(--txm);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--tx);background:#fff;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg textarea{resize:vertical;min-height:55px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+
+/* TABLE */
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:8px 10px;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--txm);border-bottom:1px solid var(--bd);}
+td{padding:8px 10px;border-bottom:1px solid rgba(200,146,42,.07);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(200,146,42,.04);}
+.tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500;}
+.tprod{background:#E8F4FD;color:#1A6FA0;}
+.tsale{background:var(--gl);color:var(--g);}
+.tstock{background:var(--aml);color:var(--am);}
+.tdrink{background:#F3E8FD;color:#6A1FA0;}
+.tloss{background:var(--rl);color:var(--r);}
+.taudit{background:#FDF3E3;color:#8B5E0A;}
+
+/* FILLING */
+.fgrd{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px;margin-bottom:13px;}
+.fc{border:2px solid var(--bd);border-radius:11px;padding:11px;cursor:pointer;transition:all .2s;text-align:center;}
+.fc:hover{border-color:var(--gold);}
+.fc.sel{border-color:var(--gold);background:var(--gold-p);}
+.fce{font-size:20px;margin-bottom:3px;}
+.fcn{font-size:11px;font-weight:500;}
+
+/* QTY */
+.qrow{display:flex;align-items:center;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
+.qb{width:31px;height:31px;border-radius:7px;border:1px solid var(--bd);background:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gold);}
+.qb:hover{background:var(--gold-p);border-color:var(--gold);}
+.qdis{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;min-width:42px;text-align:center;}
+
+/* TABS */
+.tabs{display:flex;margin-bottom:14px;border-bottom:1px solid var(--bd);}
+.tabb{padding:8px 14px;background:none;border:none;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--txm);cursor:pointer;transition:all .2s;margin-bottom:-1px;}
+.tabb.act{color:var(--gold);border-bottom-color:var(--gold);}
+.tbc{display:none;}.tbc.act{display:block;}
+
+/* MODALS */
+.mov{position:fixed;inset:0;background:rgba(28,18,8,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:14px;}
+.mbox{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;}
+.mt{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--brown);margin-bottom:14px;}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+
+/* MISC */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px;}
+.empty{text-align:center;padding:24px;color:var(--txm);font-size:12px;}
+.toast{position:fixed;bottom:16px;right:16px;background:var(--brown);color:var(--gold-l);padding:10px 15px;border-radius:9px;font-size:12px;font-weight:500;border:1px solid rgba(200,146,42,.28);transform:translateY(55px);opacity:0;transition:all .3s;z-index:999;max-width:260px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.prev{background:var(--cream);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:12px;}
+.prow{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;}
+.shgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:13px;}
+.shi{background:var(--cream);border:1px solid var(--bd);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:7px;}
+.shi input{width:60px;padding:4px 7px;border:1px solid var(--bd);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;text-align:center;background:#fff;outline:none;}
+.shi input:focus{border-color:var(--gold);}
+.shopres{background:var(--brown);border-radius:12px;padding:18px;color:#fff;font-family:monospace;font-size:12px;line-height:1.9;white-space:pre-wrap;word-break:break-word;}
+.urow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd);}
+.urow:last-child{border-bottom:none;}
+.addbtn-row{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap;}
+.audit-box{background:linear-gradient(135deg,#FDF3E3,#FAF6EF);border:1px solid rgba(200,146,42,.25);border-radius:12px;padding:16px;margin-bottom:13px;}
+.audit-result{padding:10px 13px;border-radius:8px;font-size:13px;font-weight:500;margin-top:10px;display:none;}
+.audit-result.ok{background:var(--gl);color:var(--g);}
+.audit-result.warn{background:var(--aml);color:var(--am);}
+
+/* Inventory manage list */
+.inv-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--cream);border:1px solid var(--bd);border-radius:9px;margin-bottom:6px;}
+.inv-item-name{flex:1;font-size:12px;font-weight:500;}
+.inv-item-unit{font-size:11px;color:var(--txm);}
+
+@media(max-width:560px){
+  .content{padding:10px;}
+  .frow{grid-template-columns:1fr;}
+  .frow3{grid-template-columns:1fr 1fr;}
+  .sgrid{grid-template-columns:1fr 1fr;}
+  .topbar{padding:0 10px;}
+  .lbox{padding:28px 18px;}
+  .tname,.trole{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="pg-load">
+  <div><div class="load-logo">Cinco Panes</div><div class="load-sub">Connecting...</div></div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" style="display:none">
+  <div class="lbox">
+    <div class="llogo">Cinco Panes</div>
+    <div class="ltag">Production Management</div>
+    <div class="lr"><label>Username</label><input id="li-u" autocomplete="off" autocapitalize="none"></div>
+    <div class="lr"><label>Password</label><input id="li-p" type="password"></div>
+    <div class="lr"><label>Language / Idioma</label>
+      <select id="li-lang"><option value="en">English</option><option value="es">Español</option></select>
+    </div>
+    <button class="lbtn" onclick="doLogin()">Sign In / Iniciar Sesión</button>
+    <div class="lerr" id="li-err">Incorrect username or password</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="pg-app">
+  <div class="topbar">
+    <div class="tbrand">Cinco Panes</div>
+    <div class="tright">
+      <div class="syncd" id="sdot"></div>
+      <div class="tav" id="t-av">J</div>
+      <div class="tname" id="t-nm">Jefe</div>
+      <div class="trole ro" id="t-role">Owner</div>
+      <button class="tout" onclick="doLogout()" id="t-out">Sign Out</button>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="nb act" onclick="sp('dash')" data-p="dash" id="nb-dash">📊 Dashboard</button>
+    <button class="nb" onclick="sp('stock')" data-p="stock" id="nb-stock">📦 Stock</button>
+    <button class="nb" onclick="sp('prod')" data-p="prod" id="nb-prod">🍞 Production</button>
+    <button class="nb" onclick="sp('drinks')" data-p="drinks" id="nb-drinks">🥤 Drinks</button>
+    <button class="nb" onclick="sp('sales')" data-p="sales" id="nb-sales">💰 Sales</button>
+    <button class="nb" onclick="sp('loss')" data-p="loss" id="nb-loss">⚠️ Losses</button>
+    <button class="nb" onclick="sp('shop')" data-p="shop" id="nb-shop">🛒 Shopping</button>
+    <button class="nb" onclick="sp('log')" data-p="log" id="nb-log">📋 Log</button>
+    <button class="nb" onclick="sp('tasks')" data-p="tasks" id="nb-tasks">📌 Instructions</button>
+    <button class="nb" onclick="sp('inv')" data-p="inv" id="nb-inv" style="display:none">⚙️ Inventory</button>
+    <button class="nb" onclick="sp('users')" data-p="users" id="nb-users" style="display:none">👥 Users</button>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="pg act" id="pg-dash">
+      <div id="alert-box"></div>
+      <div class="sgrid" id="stats-box"></div>
+      <div class="card"><div class="ct"><div class="ci">🏭</div><span id="cap-t">Production Capacity</span></div>
+        <p style="font-size:11px;color:var(--txm);margin-bottom:11px" id="cap-s">Buns you can make now per filling:</p>
+        <div class="igrid" id="cap-grid"></div>
+      </div>
+      <div class="card"><div class="ct"><div class="ci">📈</div><span id="tod-t">Today's Activity</span></div>
+        <div id="tod-box"></div>
+      </div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="pg" id="pg-stock">
+      <div class="sh">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px" id="st-t">Stock</h2>
+        <button class="btn bp" onclick="openStockModal()" id="st-btn">+ Update Stock</button>
+      </div>
+      <div class="tabs">
+        <button class="tabb act" onclick="stTab('ing',this)" id="stab-ing">Ingredients</button>
+        <button class="tabb" onclick="stTab('pack',this)" id="stab-pack">Packing</button>
+        <button class="tabb" onclick="stTab('comm',this)" id="stab-comm">Commercial</button>
+      </div>
+      <div class="tbc act" id="stbc-ing"><div class="igrid" id="ing-grid"></div></div>
+      <div class="tbc" id="stbc-pack"><div class="igrid" id="pack-grid"></div></div>
+      <div class="tbc" id="stbc-comm"><div class="igrid" id="comm-grid"></div></div>
+    </div>
+
+    <!-- PRODUCTION -->
+    <div class="pg" id="pg-prod">
+      <div class="card">
+        <div class="ct"><div class="ci">🍞</div><span id="pr-t">Log Production</span></div>
+        <p style="font-size:11px;color:var(--txm);margin-bottom:14px" id="pr-s">Select filling & quantity. All ingredients auto-deducted.</p>
+        <label style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--txm);display:block;margin-bottom:8px" id="pr-fl">Select Filling</label>
+        <div class="fgrd" id="fill-sel"></div>
+        <label style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--txm);display:block;margin-bottom:8px" id="pr-ql">Buns</label>
+        <div class="qrow">
+          <button class="qb" onclick="chQ(-1)">−</button><div class="qdis" id="pr-qty">1</div><button class="qb" onclick="chQ(1)">+</button>
+          <button class="qb" onclick="chQ(-10)" style="font-size:11px;width:auto;padding:0 8px">−10</button>
+          <button class="qb" onclick="chQ(10)" style="font-size:11px;width:auto;padding:0 8px">+10</button>
+        </div>
+        <div id="pr-prev" style="display:none" class="prev">
+          <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--txm);margin-bottom:7px" id="pr-dl">Deductions:</div>
+          <div id="pr-dlist"></div>
+        </div>
+        <button class="btn bp" onclick="logProd()" style="width:100%" id="pr-cf">✓ Confirm Production</button>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="pg" id="pg-drinks">
+      <div class="tabs">
+        <button class="tabb act" onclick="drTab('make',this)" id="dtab-make">Produce</button>
+        <button class="tabb" onclick="drTab('cs',this)" id="dtab-cs">Commercial</button>
+        <button class="tabb" onclick="drTab('fin',this)" id="dtab-fin">Finished</button>
+      </div>
+      <div class="tbc act" id="dtbc-make">
+        <div class="card">
+          <div class="ct"><div class="ci">🍹</div><span id="mar-t">Produce Maracuyá</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="mar-s">1 batch = 1L Pulp + 150g Sugar + ~450ml Water → 3 × 500ml bottles (1 logo sticker each)</p>
+          <div class="qrow"><button class="qb" onclick="chMar(-1)">−</button><div class="qdis" id="mar-qty">1</div><button class="qb" onclick="chMar(1)">+</button><span style="font-size:12px;color:var(--txm)" id="mar-bl">batches</span></div>
+          <div class="prev" id="mar-prev"></div>
+          <button class="btn bp" onclick="logMar()" style="width:100%" id="mar-btn">✓ Confirm</button>
+        </div>
+        <div class="card">
+          <div class="ct"><div class="ci">💧</div><span id="wat-t">Bottle Natural Water</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="wat-s">1L → 2 × 500ml bottles (1 logo sticker each)</p>
+          <div class="qrow"><button class="qb" onclick="chWat(-1)">−</button><div class="qdis" id="wat-qty">1</div><button class="qb" onclick="chWat(1)">+</button><span style="font-size:12px;color:var(--txm)" id="wat-ll">liters</span></div>
+          <div class="prev" id="wat-prev"></div>
+          <button class="btn bp" onclick="logWat()" style="width:100%" id="wat-btn">✓ Confirm</button>
+        </div>
+      </div>
+      <div class="tbc" id="dtbc-cs">
+        <div class="card"><div class="ct"><div class="ci">🥤</div><span id="cs-t">Commercial Drinks</span></div>
+          <div class="igrid" id="cs-grid"></div>
+          <button class="btn bp" onclick="openCommModal()" style="margin-top:13px" id="cs-btn">+ Update Stock</button>
+        </div>
+      </div>
+      <div class="tbc" id="dtbc-fin">
+        <div class="card"><div class="ct"><div class="ci">🍾</div><span id="fin-t">Finished Bottles</span></div>
+          <div class="igrid" id="fin-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALES -->
+    <div class="pg" id="pg-sales">
+      <div class="tabs">
+        <button class="tabb act" onclick="saTab('bns',this)" id="satab-bns">Buns</button>
+        <button class="tabb" onclick="saTab('drs',this)" id="satab-drs">Drinks</button>
+      </div>
+      <div class="tbc act" id="satbc-bns">
+        <div class="card">
+          <div class="ct"><div class="ci">🍞</div><span id="sb-t">Bun Sales</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:10px" id="sb-note">Deducts: 1 food bag + 1 logo sticker per sale.</p>
+          <div id="bun-sf"></div>
+          <button class="btn bp" onclick="logBunSale()" style="width:100%;margin-top:10px" id="sb-btn">✓ Confirm Sale</button>
+        </div>
+        <div class="card"><div class="ct"><div class="ci">📦</div><span id="finb-t">Finished Buns</span></div><div class="igrid" id="finb-grid"></div></div>
+      </div>
+      <div class="tbc" id="satbc-drs">
+        <div class="card">
+          <div class="ct"><div class="ci">🥤</div><span id="sd-t">Drink Sales</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:10px" id="sd-note">Deducts: 1 drink bag + 1 logo sticker per sale.</p>
+          <div id="drink-sf"></div>
+          <button class="btn bp" onclick="logDrinkSale()" style="width:100%;margin-top:10px" id="sd-btn">✓ Confirm Sale</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSS -->
+    <div class="pg" id="pg-loss">
+      <div class="tabs">
+        <button class="tabb act" onclick="lossTab('normal',this)" id="ltab-normal">Normal Loss</button>
+        <button class="tabb" onclick="lossTab('audit',this)" id="ltab-audit">⚖️ Prep Loss Audit</button>
+      </div>
+      <div class="tbc act" id="ltbc-normal">
+        <div class="card">
+          <div class="ct"><div class="ci">⚠️</div><span id="ls-t">Log Loss</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="ls-s">Report damaged, ruined, or unsellable items.</p>
+          <div class="fg"><label id="ls-tl">Item Type</label><select id="ls-type" onchange="renderLossItems()"></select></div>
+          <div id="ls-items"></div>
+          <div class="fg"><label id="ls-rl">Reason (optional)</label><textarea id="ls-reason" rows="2"></textarea></div>
+          <button class="btn bp" onclick="logLoss()" style="width:100%" id="ls-btn">⚠️ Log Loss</button>
+        </div>
+        <div class="card"><div class="ct"><div class="ci">📋</div><span id="ls-ht">Recent Losses</span></div>
+          <div class="tw"><table><thead><tr><th id="lc-t">Time</th><th id="lc-u">User</th><th id="lc-i">Item</th><th id="lc-q">Qty</th><th id="lc-r">Reason</th></tr></thead><tbody id="loss-tbody"></tbody></table></div>
+        </div>
+      </div>
+      <div class="tbc" id="ltbc-audit">
+        <div class="audit-box">
+          <div style="font-size:13px;font-weight:600;color:var(--brown);margin-bottom:3px">⚖️ <span id="au-t">Weekly Prep Loss Audit</span></div>
+          <div style="font-size:11px;color:var(--txm);margin-bottom:13px" id="au-s">Weigh before & after prep. Auto-deducted from stock. Visible to all users.</div>
+          <div class="frow">
+            <div class="fg"><label id="au-il">Ingredient</label><select id="au-ing"></select></div>
+            <div class="fg"><label id="au-wl">Week of</label><input type="date" id="au-date"></div>
+          </div>
+          <div class="frow3">
+            <div class="fg"><label id="au-bl">Weight Before (g)</label><input type="number" id="au-before" min="0" placeholder="1000"></div>
+            <div class="fg"><label id="au-al">Weight After (g)</label><input type="number" id="au-after" min="0" placeholder="750"></div>
+            <div class="fg" style="display:flex;flex-direction:column;justify-content:flex-end"><button class="btn bo" onclick="calcAudit()" style="width:100%" id="au-calc">Calculate</button></div>
+          </div>
+          <div class="audit-result" id="au-result"></div>
+          <button class="btn bp" onclick="logAudit()" style="width:100%;margin-top:10px" id="au-btn">✓ Log & Deduct Stock</button>
+        </div>
+        <div class="card"><div class="ct"><div class="ci">📊</div><span id="au-ht">Audit History</span></div>
+          <div class="tw"><table><thead><tr><th id="ah-d">Date</th><th id="ah-u">User</th><th id="ah-i">Ingredient</th><th id="ah-b">Before</th><th id="ah-a">After</th><th id="ah-l">Lost</th><th id="ah-p">%</th></tr></thead><tbody id="audit-tbody"></tbody></table></div>
+        </div>
+        <div class="card"><div class="ct"><div class="ci">📉</div><span id="au-avgt">Average Loss by Ingredient</span></div>
+          <div id="avg-grid" class="igrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOPPING -->
+    <div class="pg" id="pg-shop">
+      <div class="card">
+        <div class="ct"><div class="ci">🛒</div><span id="sh-t">Shopping List</span></div>
+        <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="sh-s">Set targets. Only missing items appear.</p>
+        <div style="display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;">
+          <button class="btn bo" onclick="setQuick()" id="sh-q">⚡ 1 Batch</button>
+          <button class="btn bp" onclick="genList()" id="sh-g">Generate List</button>
+          <button class="btn bg2" onclick="copyList()" id="sh-c" style="display:none">📋 WhatsApp</button>
+        </div>
+        <div class="tabs">
+          <button class="tabb act" onclick="shTab('bns',this)" id="shtab-bns">Buns</button>
+          <button class="tabb" onclick="shTab('drs',this)" id="shtab-drs">Drinks</button>
+          <button class="tabb" onclick="shTab('pck',this)" id="shtab-pck">Packing</button>
+        </div>
+        <div class="tbc act" id="shtbc-bns"><div class="shgrid" id="sh-buns"></div></div>
+        <div class="tbc" id="shtbc-drs"><div class="shgrid" id="sh-drinks"></div></div>
+        <div class="tbc" id="shtbc-pck"><div class="shgrid" id="sh-pack"></div></div>
+      </div>
+      <div class="card" id="sh-rc" style="display:none">
+        <div class="ct"><div class="ci">📱</div><span id="sh-rt">Your List</span></div>
+        <div id="sh-res"></div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="pg" id="pg-log">
+      <div class="sh">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px" id="log-t">Log</h2>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <select id="log-fu" onchange="renderLog()" style="padding:7px 10px;border:1px solid var(--bd);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;background:#fff;color:var(--tx);outline:none;"></select>
+          <select id="log-ft" onchange="renderLog()" style="padding:7px 10px;border:1px solid var(--bd);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;background:#fff;color:var(--tx);outline:none;">
+            <option value="">All</option><option value="production">Production</option><option value="sale">Sale</option>
+            <option value="drinks">Drinks</option><option value="stock">Stock</option><option value="loss">Loss</option><option value="audit">Audit</option>
+          </select>
+        </div>
+      </div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Time</th><th>User</th><th>Type</th><th>Details</th></tr></thead>
+        <tbody id="log-tbody"></tbody>
+      </table></div></div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div class="pg" id="pg-tasks">
+      <div class="tabs">
+        <button class="tabb act" onclick="tasksTab('today',this)" id="ttab-today">Today</button>
+        <button class="tabb" onclick="tasksTab('archive',this)" id="ttab-archive">Archive</button>
+        <button class="tabb" onclick="tasksTab('send',this)" id="ttab-send" style="display:none">+ New</button>
+      </div>
+      <div class="tbc act" id="ttbc-today"><div id="tasks-today-box"></div></div>
+      <div class="tbc" id="ttbc-archive">
+        <div class="card">
+          <div class="ct"><div class="ci">🗂</div><span id="arch-t">Archive</span></div>
+          <div class="frow" style="margin-bottom:13px">
+            <div class="fg"><label id="arch-ul">Worker</label><select id="arch-user" onchange="renderArchive()"></select></div>
+            <div class="fg"><label id="arch-dl">Date</label><input type="date" id="arch-date" onchange="renderArchive()"></div>
+          </div>
+          <div id="arch-box"></div>
+        </div>
+      </div>
+      <div class="tbc" id="ttbc-send">
+        <div class="card">
+          <div class="ct"><div class="ci">✏️</div><span id="send-t">New Daily Instructions</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="send-s">Private — each worker only sees their own.</p>
+          <div class="frow">
+            <div class="fg"><label id="send-wl">For Worker</label><select id="send-worker"></select></div>
+            <div class="fg"><label id="send-dl">Date</label><input type="date" id="send-date"></div>
+          </div>
+          <div class="fg"><label id="send-nl">General Note</label><textarea id="send-note" rows="2" placeholder="E.g. Start at 7am, big order tonight..."></textarea></div>
+          <div style="font-size:11px;font-weight:600;color:var(--brown);margin-bottom:8px;text-transform:uppercase;letter-spacing:.07em" id="send-tl">Tasks</div>
+          <div id="task-builder"></div>
+          <button class="btn bo bsm" onclick="addTaskRow()" style="margin-bottom:13px" id="send-add">+ Add Task</button>
+          <button class="btn bp" onclick="sendInstructions()" style="width:100%" id="send-btn">📌 Send Instructions</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTORY MANAGEMENT (owner/manager) -->
+    <div class="pg" id="pg-inv">
+      <div class="tabs">
+        <button class="tabb act" onclick="invTab('ing',this)">Ingredients</button>
+        <button class="tabb" onclick="invTab('pack',this)">Packing</button>
+        <button class="tabb" onclick="invTab('comm',this)">Commercial Drinks</button>
+        <button class="tabb" onclick="invTab('fill',this)">Fillings</button>
+      </div>
+      <div class="tbc act" id="invtbc-ing">
+        <div class="card">
+          <div class="ct"><div class="ci">🥩</div><span id="inv-ing-t">Manage Ingredients</span></div>
+          <div class="addbtn-row">
+            <input type="text" id="new-ing-name" placeholder="Ingredient name" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:180px;outline:none;">
+            <input type="text" id="new-ing-unit" placeholder="Unit (g/L/units)" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:130px;outline:none;">
+            <button class="btn bp bsm" onclick="addIng()">+ Add</button>
+          </div>
+          <div id="ing-manage-list"></div>
+        </div>
+      </div>
+      <div class="tbc" id="invtbc-pack">
+        <div class="card">
+          <div class="ct"><div class="ci">📦</div><span id="inv-pack-t">Manage Packing</span></div>
+          <div class="addbtn-row">
+            <input type="text" id="new-pack-name" placeholder="Packing item name" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:200px;outline:none;">
+            <input type="text" id="new-pack-unit" placeholder="Unit" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:100px;outline:none;">
+            <button class="btn bp bsm" onclick="addPack()">+ Add</button>
+          </div>
+          <div id="pack-manage-list"></div>
+        </div>
+      </div>
+      <div class="tbc" id="invtbc-comm">
+        <div class="card">
+          <div class="ct"><div class="ci">🥤</div><span id="inv-comm-t">Manage Commercial Drinks</span></div>
+          <div class="addbtn-row">
+            <input type="text" id="new-comm-name" placeholder="Drink name (e.g. Pepsi 500ml)" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:220px;outline:none;">
+            <button class="btn bp bsm" onclick="addComm()">+ Add</button>
+          </div>
+          <div id="comm-manage-list"></div>
+        </div>
+      </div>
+      <div class="tbc" id="invtbc-fill">
+        <div class="card">
+          <div class="ct"><div class="ci">🍞</div><span id="inv-fill-t">Manage Filling Recipes</span></div>
+          <p style="font-size:11px;color:var(--txm);margin-bottom:13px" id="inv-fill-s">Select a filling to edit its ingredients and quantities.</p>
+          <div class="fgrd" id="fill-pick"></div>
+          <div id="fill-recipe-editor" style="display:none">
+            <hr style="border:none;border-top:1px solid var(--bd);margin:14px 0;">
+            <div style="font-size:13px;font-weight:600;color:var(--brown);margin-bottom:11px" id="fill-recipe-title">Recipe</div>
+            <div id="fill-recipe-list"></div>
+            <div class="addbtn-row" style="margin-top:10px">
+              <select id="fill-add-ing" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;"></select>
+              <input type="number" id="fill-add-qty" placeholder="g" min="1" style="padding:7px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;width:80px;outline:none;">
+              <button class="btn bp bsm" onclick="addFillIng()">+ Add to Recipe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="pg" id="pg-users">
+      <div class="sh">
+        <h2 style="font-family:'Playfair Display',serif;font-size:19px" id="us-t">Users</h2>
+        <button class="btn bp" onclick="openUserModal()" id="us-btn">+ Add Worker</button>
+      </div>
+      <div class="card" id="users-card"></div>
+      <div class="card" style="background:var(--gold-p);border-color:rgba(200,146,42,.28)">
+        <div class="ct" style="font-size:14px">🔑 <span id="mk-t">Master Key</span></div>
+        <p style="font-size:12px;color:var(--txs);margin-bottom:10px" id="mk-d">Access any account. Keep it private.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="password" id="mk-in" style="flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:8px;font-family:monospace;font-size:14px;outline:none;background:#fff;">
+          <button class="btn bo bsm" onclick="toggleMK()" id="mk-sh">Show</button>
+          <button class="btn bp bsm" onclick="saveMK()" id="mk-sv">Save</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mov" id="m-stock">
+  <div class="mbox">
+    <div class="mt">📦 <span id="mst-t">Update Stock</span></div>
+    <div class="fg"><label id="mst-il">Item</label><select id="mst-sel"></select></div>
+    <div class="frow">
+      <div class="fg"><label id="mst-al">Amount</label><input type="number" id="mst-amt" min="0" step="any" placeholder="0"></div>
+      <div class="fg"><label id="mst-acl">Action</label>
+        <select id="mst-ac"><option value="add" id="mst-add">Add to current</option><option value="set" id="mst-set">Set exact</option></select>
+      </div>
+    </div>
+    <div class="ma"><button class="btn bo" onclick="cm('m-stock')" id="mst-cn">Cancel</button><button class="btn bp" onclick="saveStock()" id="mst-sv">Update</button></div>
+  </div>
+</div>
+
+<div class="mov" id="m-comm">
+  <div class="mbox">
+    <div class="mt">🥤 <span id="mco-t">Update Commercial</span></div>
+    <div id="mco-form"></div>
+    <div class="ma"><button class="btn bo" onclick="cm('m-comm')" id="mco-cn">Cancel</button><button class="btn bp" onclick="saveComm()" id="mco-sv">Update</button></div>
+  </div>
+</div>
+
+<div class="mov" id="m-user">
+  <div class="mbox">
+    <div class="mt">👤 <span id="mu-t">Add Worker</span></div>
+    <div class="frow">
+      <div class="fg"><label id="mu-nl">Full Name</label><input type="text" id="mu-name" placeholder="María"></div>
+      <div class="fg"><label id="mu-ul">Username</label><input type="text" id="mu-user" placeholder="maria" autocapitalize="none"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label id="mu-pl">Password</label><input type="password" id="mu-pass"></div>
+      <div class="fg"><label id="mu-rl">Role</label>
+        <select id="mu-role"><option value="worker">Worker</option><option value="manager">Manager</option></select>
+      </div>
+    </div>
+    <div class="ma"><button class="btn bo" onclick="cm('m-user')" id="mu-cn">Cancel</button><button class="btn bp" onclick="saveUser()" id="mu-cr">Create</button></div>
+  </div>
+</div>
+
+<div class="mov" id="m-reset">
+  <div class="mbox">
+    <div class="mt">🔒 <span id="mr-t">Reset Password</span></div>
+    <p style="font-size:12px;color:var(--txm);margin-bottom:11px"><span id="mr-for">For</span> <strong id="mr-nm"></strong></p>
+    <div class="fg"><label id="mr-pl">New Password</label><input type="password" id="mr-pass"></div>
+    <input type="hidden" id="mr-uid">
+    <div class="ma"><button class="btn bo" onclick="cm('m-reset')" id="mr-cn">Cancel</button><button class="btn bp" onclick="doReset()" id="mr-rb">Reset</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,getDoc,setDoc,onSnapshot}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const FC={apiKey:"AIzaSyDooDs2rSNCoZl8gnM91XPAqrsLsH8o6CE",authDomain:"cinco-panes.firebaseapp.com",projectId:"cinco-panes",storageBucket:"cinco-panes.firebasestorage.app",messagingSenderId:"534598344430",appId:"1:534598344430:web:a25795af5f422b634b9dff"};
+const fbapp=initializeApp(FC);
+const fdb=getFirestore(fbapp);
+const DBREF=doc(fdb,'app','data');
+function setSd(s){const d=document.getElementById('sdot');if(d)d.className='syncd'+(s==='syn'?' syn':s==='err'?' err':'');}
+window._fbSave=async(data)=>{setSd('syn');try{await setDoc(DBREF,{payload:JSON.stringify(data)});setSd('');}catch(e){console.error(e);setSd('err');throw e;}};
+window._fbLoad=async()=>{const s=await getDoc(DBREF);if(s.exists()&&s.data().payload)return JSON.parse(s.data().payload);return null;};
+window._fbListen=()=>{onSnapshot(DBREF,snap=>{if(snap.exists()&&snap.data().payload){try{const f=JSON.parse(snap.data().payload);if(window._lastSave&&Date.now()-window._lastSave<4000)return;window.DB=f;if(window._curPage)window._rerender(window._curPage);}catch(e){}}});};
+window._fbLoad().then(d=>{window._initApp(d);window._fbListen();}).catch(e=>{console.error(e);document.getElementById('pg-load').innerHTML='<div style="text-align:center;color:#fff;padding:40px"><div style="font-size:18px;margin-bottom:8px">⚠️ Connection Error</div><div style="font-size:12px;opacity:.6">Check Firebase rules & internet, then reload</div></div>';});
+</script>
+
+<script>
+// ══════════════════════
+// I18N
+// ══════════════════════
+const TR={
+en:{
+  'cap-t':'Production Capacity','cap-s':'Buns you can make now per filling:','tod-t':"Today's Activity",
+  'st-t':'Stock','st-btn':'+ Update Stock','stab-ing':'Ingredients','stab-pack':'Packing','stab-comm':'Commercial',
+  'pr-t':'Log Production','pr-s':'Select filling & quantity. All deducted automatically.',
+  'pr-fl':'Select Filling','pr-ql':'Buns','pr-dl':'Deductions:','pr-cf':'✓ Confirm Production',
+  'dtab-make':'Produce','dtab-cs':'Commercial','dtab-fin':'Finished',
+  'mar-t':'Produce Maracuyá','mar-s':'1 batch = 1L Pulp + 150g Sugar + ~450ml Water → 3 × 500ml bottles (1 logo sticker each)','mar-bl':'batches','mar-btn':'✓ Confirm',
+  'wat-t':'Bottle Natural Water','wat-s':'1L → 2 × 500ml bottles (1 logo sticker each)','wat-ll':'liters','wat-btn':'✓ Confirm',
+  'cs-t':'Commercial Drinks','cs-btn':'+ Update Stock','fin-t':'Finished Bottles',
+  'satab-bns':'Buns','satab-drs':'Drinks',
+  'sb-t':'Bun Sales','sb-note':'Deducts: 1 food bag + 1 logo sticker per sale.','sb-btn':'✓ Confirm Sale',
+  'finb-t':'Finished Buns','sd-t':'Drink Sales','sd-note':'Deducts: 1 drink bag + 1 logo sticker per sale.','sd-btn':'✓ Confirm Sale',
+  'ltab-normal':'Normal Loss','ltab-audit':'⚖️ Prep Loss Audit',
+  'ls-t':'Log Loss','ls-s':'Report damaged, ruined, or unsellable items.',
+  'ls-tl':'Item Type','ls-rl':'Reason (optional)','ls-btn':'⚠️ Log Loss','ls-ht':'Recent Losses',
+  'lc-t':'Time','lc-u':'User','lc-i':'Item','lc-q':'Qty','lc-r':'Reason',
+  'au-t':'Weekly Prep Loss Audit','au-s':'Weigh before & after prep. Auto-deducted from stock. Visible to all users.',
+  'au-il':'Ingredient','au-wl':'Week of','au-bl':'Weight Before (g)','au-al':'Weight After (g)',
+  'au-calc':'Calculate','au-btn':'✓ Log & Deduct Stock','au-ht':'Audit History',
+  'ah-d':'Date','ah-u':'User','ah-i':'Ingredient','ah-b':'Before','ah-a':'After','ah-l':'Lost','ah-p':'%',
+  'au-avgt':'Average Loss by Ingredient',
+  'sh-t':'Shopping List','sh-s':'Set targets. Only missing items appear.',
+  'sh-q':'⚡ 1 Batch','sh-g':'Generate List','sh-c':'📋 WhatsApp',
+  'shtab-bns':'Buns','shtab-drs':'Drinks','shtab-pck':'Packing','sh-rt':'Your List',
+  'nb-dash':'📊 Dashboard','nb-stock':'📦 Stock','nb-prod':'🍞 Production','nb-drinks':'🥤 Drinks',
+  'nb-sales':'💰 Sales','nb-loss':'⚠️ Losses','nb-shop':'🛒 Shopping','nb-log':'📋 Log','nb-inv':'⚙️ Inventory','nb-users':'👥 Users',
+  't-out':'Sign Out',
+  'us-t':'Users','us-btn':'+ Add Worker','mk-t':'Master Key','mk-d':'Access any account. Keep it private.','mk-sh':'Show','mk-sv':'Save',
+  'mst-t':'Update Stock','mst-il':'Item','mst-al':'Amount','mst-acl':'Action','mst-add':'Add to current','mst-set':'Set exact','mst-cn':'Cancel','mst-sv':'Update',
+  'mco-t':'Commercial Drinks','mco-cn':'Cancel','mco-sv':'Update',
+  'mu-t':'Add Worker','mu-nl':'Full Name','mu-ul':'Username','mu-pl':'Password','mu-rl':'Role','mu-cn':'Cancel','mu-cr':'Create',
+  'mr-t':'Reset Password','mr-for':'For','mr-pl':'New Password','mr-cn':'Cancel','mr-rb':'Reset',
+  'inv-ing-t':'Manage Ingredients','inv-pack-t':'Manage Packing','inv-comm-t':'Manage Commercial Drinks',
+  'inv-fill-t':'Manage Filling Recipes','inv-fill-s':'Select a filling to view and edit its recipe.',
+  'nb-tasks':'📌 Instructions',
+  'ttab-today':'Today','ttab-archive':'Archive','ttab-send':'+ New',
+  'arch-t':'Archive','arch-ul':'Worker','arch-dl':'Date',
+  'send-t':'New Daily Instructions','send-s':'Private — each worker only sees their own.',
+  'send-wl':'For Worker','send-dl':'Date','send-nl':'General Note',
+  'send-tl':'Tasks','send-add':'+ Add Task','send-btn':'📌 Send Instructions',
+  task_placeholder:'E.g. Make 4 dough batches, Prepare Meat filling × 20...',
+  task_done:'Done','task_pending':'Pending',tasks_none:'No instructions for today.',
+  tasks_sent:'Instructions sent!',tasks_fill:'Add at least one task.',
+  tasks_no_worker:'Select a worker.',arch_none:'No instructions found for this date.',stat_sold:'Sold Today',stat_ready:'Ready',stat_loss:'Lost Today',stat_ev:'Events',
+  a_out:'Out of stock!',a_crit:'Critically low',a_low:'Running low',a_ok:'All stock good. Ready to produce!',rem:'remaining',
+  ro:'Owner',rm:'Manager',rw:'Worker',all_u:'All Users',
+  no_fill:'Select a filling',ne:'Not enough',
+  prod_ok:'Production logged!',sale_ok:'Sale logged!',stock_ok:'Stock updated!',loss_ok:'Loss logged.',audit_ok:'Audit logged & stock deducted.',
+  no_buns:'No buns selected',no_drinks:'No drinks selected',
+  ucr:'Account created',pwr:'Password reset',mks:'Master key saved',
+  deact:'Deactivate',act:'Activate',fill_all:'Fill all fields',uex:'Username taken',maxw:'Max 5 workers',
+  shop_none:"Nothing to buy — you're covered!",bset:'Targets set for 1 batch',
+  have:'have',will:'Will produce',bots:'bottles',buns:'buns',units:'units',avail:'available',
+  nat_water:'Natural Water',logo_stk:'Logo Sticker',avg_loss:'avg loss',
+  loss_types:{bun:'Bun',ingredient:'Ingredient',packing:'Packing',bottle:'Bottle',commercial:'Commercial Drink'},
+},
+es:{
+  'cap-t':'Capacidad de Producción','cap-s':'Panes que puedes hacer ahora por relleno:','tod-t':'Actividad de Hoy',
+  'st-t':'Stock','st-btn':'+ Actualizar','stab-ing':'Ingredientes','stab-pack':'Empaque','stab-comm':'Comercial',
+  'pr-t':'Registrar Producción','pr-s':'Selecciona relleno y cantidad. Todo se descuenta automáticamente.',
+  'pr-fl':'Seleccionar Relleno','pr-ql':'Panes','pr-dl':'Descuentos:','pr-cf':'✓ Confirmar Producción',
+  'dtab-make':'Producir','dtab-cs':'Comercial','dtab-fin':'Listas',
+  'mar-t':'Producir Maracuyá','mar-s':'1 lote = 1L Pulpa + 150g Azúcar + ~450ml Agua → 3 botellas 500ml (1 sticker logo cada una)','mar-bl':'lotes','mar-btn':'✓ Confirmar',
+  'wat-t':'Embotellar Agua','wat-s':'1L → 2 botellas de 500ml (1 sticker logo cada una)','wat-ll':'litros','wat-btn':'✓ Confirmar',
+  'cs-t':'Bebidas Comerciales','cs-btn':'+ Actualizar','fin-t':'Botellas Listas',
+  'satab-bns':'Panes','satab-drs':'Bebidas',
+  'sb-t':'Venta de Panes','sb-note':'Descuenta: 1 bolsa comida + 1 sticker logo por venta.','sb-btn':'✓ Confirmar Venta',
+  'finb-t':'Panes Terminados','sd-t':'Venta de Bebidas','sd-note':'Descuenta: 1 bolsa bebida + 1 sticker logo por venta.','sd-btn':'✓ Confirmar Venta',
+  'ltab-normal':'Pérdida Normal','ltab-audit':'⚖️ Auditoría de Merma',
+  'ls-t':'Registrar Pérdida','ls-s':'Reporta artículos dañados, arruinados o no aptos.',
+  'ls-tl':'Tipo','ls-rl':'Razón (opcional)','ls-btn':'⚠️ Registrar','ls-ht':'Pérdidas Recientes',
+  'lc-t':'Hora','lc-u':'Usuario','lc-i':'Ítem','lc-q':'Cant.','lc-r':'Razón',
+  'au-t':'Auditoría Semanal de Merma','au-s':'Pesa antes y después del preparado. Se descuenta del stock automáticamente. Visible para todos.',
+  'au-il':'Ingrediente','au-wl':'Semana de','au-bl':'Peso Antes (g)','au-al':'Peso Después (g)',
+  'au-calc':'Calcular','au-btn':'✓ Registrar y Descontar','au-ht':'Historial de Auditorías',
+  'ah-d':'Fecha','ah-u':'Usuario','ah-i':'Ingrediente','ah-b':'Antes','ah-a':'Después','ah-l':'Perdido','ah-p':'%',
+  'au-avgt':'Merma Promedio por Ingrediente',
+  'sh-t':'Lista de Compras','sh-s':'Define metas. Solo aparece lo que falta.',
+  'sh-q':'⚡ 1 Lote','sh-g':'Generar Lista','sh-c':'📋 WhatsApp',
+  'shtab-bns':'Panes','shtab-drs':'Bebidas','shtab-pck':'Empaque','sh-rt':'Tu Lista',
+  'nb-dash':'📊 Panel','nb-stock':'📦 Stock','nb-prod':'🍞 Producción','nb-drinks':'🥤 Bebidas',
+  'nb-sales':'💰 Ventas','nb-loss':'⚠️ Pérdidas','nb-shop':'🛒 Compras','nb-log':'📋 Registro','nb-inv':'⚙️ Inventario','nb-users':'👥 Usuarios',
+  't-out':'Cerrar Sesión',
+  'us-t':'Usuarios','us-btn':'+ Agregar Trabajador','mk-t':'Llave Maestra','mk-d':'Accede a cualquier cuenta. Mantenla privada.','mk-sh':'Ver','mk-sv':'Guardar',
+  'mst-t':'Actualizar Stock','mst-il':'Ítem','mst-al':'Cantidad','mst-acl':'Acción','mst-add':'Agregar al stock','mst-set':'Cantidad exacta','mst-cn':'Cancelar','mst-sv':'Actualizar',
+  'mco-t':'Bebidas Comerciales','mco-cn':'Cancelar','mco-sv':'Actualizar',
+  'mu-t':'Agregar Trabajador','mu-nl':'Nombre','mu-ul':'Usuario','mu-pl':'Contraseña','mu-rl':'Rol','mu-cn':'Cancelar','mu-cr':'Crear',
+  'mr-t':'Restablecer Contraseña','mr-for':'Para','mr-pl':'Nueva Contraseña','mr-cn':'Cancelar','mr-rb':'Restablecer',
+  'inv-ing-t':'Gestionar Ingredientes','inv-pack-t':'Gestionar Empaque','inv-comm-t':'Gestionar Bebidas Comerciales',
+  'inv-fill-t':'Gestionar Recetas de Relleno','inv-fill-s':'Selecciona un relleno para ver y editar su receta.',
+  'nb-tasks':'📌 Instrucciones',
+  'ttab-today':'Hoy','ttab-archive':'Archivo','ttab-send':'+ Nueva',
+  'arch-t':'Archivo','arch-ul':'Trabajador','arch-dl':'Fecha',
+  'send-t':'Nuevas Instrucciones Diarias','send-s':'Privadas — cada trabajador solo ve las suyas.',
+  'send-wl':'Para Trabajador','send-dl':'Fecha','send-nl':'Nota General',
+  'send-tl':'Tareas','send-add':'+ Agregar Tarea','send-btn':'📌 Enviar Instrucciones',
+  task_placeholder:'Ej. Hacer 4 tandas de masa, Preparar relleno Carne × 20...',
+  task_done:'Hecho','task_pending':'Pendiente',tasks_none:'Sin instrucciones para hoy.',
+  tasks_sent:'¡Instrucciones enviadas!',tasks_fill:'Agrega al menos una tarea.',
+  tasks_no_worker:'Selecciona un trabajador.',arch_none:'Sin instrucciones para esta fecha.',stat_sold:'Vendido Hoy',stat_ready:'Listo',stat_loss:'Perdido Hoy',stat_ev:'Eventos',
+  a_out:'Sin stock.',a_crit:'Nivel crítico',a_low:'Stock bajo',a_ok:'¡Todo el stock está bien!',rem:'restantes',
+  ro:'Propietario',rm:'Gerente',rw:'Trabajador',all_u:'Todos los Usuarios',
+  no_fill:'Selecciona un relleno',ne:'Stock insuficiente',
+  prod_ok:'¡Producción registrada!',sale_ok:'¡Venta registrada!',stock_ok:'¡Stock actualizado!',loss_ok:'Pérdida registrada.',audit_ok:'Auditoría registrada y stock descontado.',
+  no_buns:'No hay panes seleccionados',no_drinks:'No hay bebidas seleccionadas',
+  ucr:'Cuenta creada',pwr:'Contraseña restablecida',mks:'Llave maestra guardada',
+  deact:'Desactivar',act:'Activar',fill_all:'Completa todos los campos',uex:'Usuario ya existe',maxw:'Máximo 5 trabajadores',
+  shop_none:'¡No necesitas comprar nada!',bset:'Metas establecidas para 1 lote',
+  have:'tiene',will:'Producirá',bots:'botellas',buns:'panes',units:'unidades',avail:'disponibles',
+  nat_water:'Agua Natural',logo_stk:'Sticker Logo',avg_loss:'merma prom.',
+  loss_types:{bun:'Pan',ingredient:'Ingrediente',packing:'Empaque',bottle:'Botella',commercial:'Bebida Comercial'},
+}};
+let LG='en';
+function t(k){return TR[LG]?.[k]??TR.en[k]??k;}
+function applyLang(){
+  Object.keys(TR.en).forEach(k=>{
+    if(typeof TR.en[k]!=='string')return;
+    const el=document.getElementById(k);
+    if(el)el.textContent=t(k);
+  });
+  const lts=document.getElementById('ls-type');
+  if(lts){const lt=t('loss_types');lts.innerHTML=`<option value="bun">${lt.bun}</option><option value="ingredient">${lt.ingredient}</option><option value="packing">${lt.packing}</option><option value="bottle">${lt.bottle||'Bottle'}</option><option value="commercial">${lt.commercial}</option>`;}
+}
+
+// ══════════════════════
+// DEFAULT DATA
+// ══════════════════════
+const DEF_FILL=[
+  {id:'meat',en:'Meat',es:'Carne',emoji:'🥩',ing:{'Potato Dough':110,'Cuadril':600,'White Onion':250,'Green Pepper':100,'Salt':10,'Oregano':5,'Oil':10}},
+  {id:'chicken',en:'Chicken',es:'Pollo',emoji:'🍗',ing:{'Potato Dough':110,'Chicken Breast':600,'Green Onion':150,'Green Pepper':100,'Salt':10,'Paprika':10,'Oregano':5,'Oil':10}},
+  {id:'chorizo',en:'Chorizo',es:'Chorizo',emoji:'🌭',ing:{'Potato Dough':110,'Chorizo':700,'Garlic':30,'Oregano':5,'Salt':5,'Oil':5}},
+  {id:'cheese',en:'Cheese',es:'Queso',emoji:'🧀',ing:{'Potato Dough':110,'Mozzarella':250,'Cheddar':250,'Red Onion':500,'Oregano':5}},
+  {id:'choc',en:'Chocolate',es:'Chocolate',emoji:'🍫',ing:{'Potato Dough':110,'Pure Chocolate':200,'Cream':200,'Milk':250,'Cocoa':110}},
+];
+
+const DEF_INGS=[
+  {id:'Potato Dough',en:'Potato Dough',es:'Masa de Papa',unit:'g'},
+  {id:'Raw Potatoes',en:'Raw Potatoes',es:'Papas Crudas',unit:'g'},
+  {id:'Flour',en:'Flour',es:'Harina',unit:'g'},
+  {id:'Butter',en:'Butter',es:'Mantequilla',unit:'g'},
+  {id:'Cuadril',en:'Cuadril',es:'Cuadril',unit:'g'},
+  {id:'White Onion',en:'White Onion',es:'Cebolla Blanca',unit:'g'},
+  {id:'Red Onion',en:'Red Onion',es:'Cebolla Colorada',unit:'g'},
+  {id:'Green Onion',en:'Green Onion',es:'Cebolla Verde',unit:'g'},
+  {id:'Green Pepper',en:'Green Pepper',es:'Morrón Verde',unit:'g'},
+  {id:'Chilli Peppers',en:'Chilli Peppers',es:'Ajíes',unit:'g'},
+  {id:'Garlic',en:'Garlic',es:'Ajo',unit:'g'},
+  {id:'Ginger',en:'Ginger',es:'Jengibre',unit:'g'},
+  {id:'Salt',en:'Salt',es:'Sal',unit:'g'},
+  {id:'Black Pepper',en:'Black Pepper',es:'Pimienta Negra',unit:'g'},
+  {id:'Oregano',en:'Oregano',es:'Orégano',unit:'g'},
+  {id:'Oil',en:'Oil',es:'Aceite',unit:'g'},
+  {id:'Chicken Breast',en:'Chicken Breast',es:'Pechuga de Pollo',unit:'g'},
+  {id:'Paprika',en:'Paprika',es:'Pimentón',unit:'g'},
+  {id:'Chorizo',en:'Chorizo',es:'Chorizo',unit:'g'},
+  {id:'Mozzarella',en:'Mozzarella',es:'Mozzarella',unit:'g'},
+  {id:'Cheddar',en:'Cheddar',es:'Cheddar',unit:'g'},
+  {id:'Pure Chocolate',en:'Pure Chocolate',es:'Chocolate Puro',unit:'g'},
+  {id:'Cream',en:'Cream',es:'Crema',unit:'g'},
+  {id:'Milk',en:'Milk',es:'Leche',unit:'g'},
+  {id:'Cocoa',en:'Cocoa',es:'Cacao',unit:'g'},
+  {id:'Eggs',en:'Eggs',es:'Huevos',unit:'units'},
+  {id:'Maracuya Pulp',en:'Maracuya Pulp',es:'Pulpa de Maracuyá',unit:'g'},
+  {id:'Sugar',en:'Sugar',es:'Azúcar',unit:'g'},
+  {id:'Water',en:'Water',es:'Agua',unit:'L'},
+];
+
+const PREP_LOSS_INGS=['Raw Potatoes','Green Pepper','Chilli Peppers','White Onion','Red Onion','Garlic','Ginger','Cuadril','Chorizo','Flour','Oil','Pure Chocolate'];
+
+const DEF_PACK=[
+  {id:'antigrease',en:'Antigrease Paper',es:'Papel Antigrasa',unit:'units'},
+  {id:'tissues',en:'Tissue Packs (500u)',es:'Paquetes Pañuelos (500u)',unit:'packs'},
+  {id:'box_sm',en:'Small Boxes (1-2 buns)',es:'Cajas Pequeñas (1-2 panes)',unit:'units'},
+  {id:'box_lg',en:'Large Boxes (3-4 buns)',es:'Cajas Grandes (3-4 panes)',unit:'units'},
+  {id:'logo_stk',en:'Logo Stickers',es:'Stickers Logo',unit:'units'},
+  {id:'bag_food',en:'Food Bags',es:'Bolsas Comida',unit:'units'},
+  {id:'bag_drink',en:'Drink Bags',es:'Bolsas Bebidas',unit:'units'},
+  {id:'stk_meat',en:'Meat Flavor Stickers',es:'Stickers Sabor Carne',unit:'units'},
+  {id:'stk_chicken',en:'Chicken Flavor Stickers',es:'Stickers Sabor Pollo',unit:'units'},
+  {id:'stk_chorizo',en:'Chorizo Flavor Stickers',es:'Stickers Sabor Chorizo',unit:'units'},
+  {id:'stk_cheese',en:'Cheese Flavor Stickers',es:'Stickers Sabor Queso',unit:'units'},
+  {id:'stk_choc',en:'Chocolate Flavor Stickers',es:'Stickers Sabor Chocolate',unit:'units'},
+];
+const FILL_STK={meat:'stk_meat',chicken:'stk_chicken',chorizo:'stk_chorizo',cheese:'stk_cheese',choc:'stk_choc'};
+
+const DEF_COMM=[
+  {id:'cola300',en:'Coca-Cola 300ml',es:'Coca-Cola 300ml'},
+  {id:'cola500',en:'Coca-Cola 500ml',es:'Coca-Cola 500ml'},
+  {id:'sprite300',en:'Sprite 300ml',es:'Sprite 300ml'},
+  {id:'sprite500',en:'Sprite 500ml',es:'Sprite 500ml'},
+  {id:'fanta300',en:'Fanta 300ml',es:'Fanta 300ml'},
+  {id:'fanta500',en:'Fanta 500ml',es:'Fanta 500ml'},
+];
+
+const REF_LVL={
+  'Potato Dough':2000,'Raw Potatoes':3000,'Flour':2000,'Butter':500,'Cuadril':1200,
+  'White Onion':500,'Red Onion':1000,'Green Onion':300,'Green Pepper':300,'Chilli Peppers':200,
+  'Garlic':200,'Ginger':200,'Salt':500,'Black Pepper':200,'Oregano':200,'Oil':1000,
+  'Chicken Breast':1200,'Paprika':300,'Chorizo':1400,'Mozzarella':500,'Cheddar':500,
+  'Pure Chocolate':400,'Cream':400,'Milk':500,'Cocoa':300,'Eggs':40,
+  'Maracuya Pulp':3000,'Sugar':1000,'Water':20,
+  antigrease:500,tissues:5,box_sm:50,box_lg:50,logo_stk:500,bag_food:100,bag_drink:100,
+  stk_meat:200,stk_chicken:200,stk_chorizo:200,stk_cheese:200,stk_choc:200,
+  cola300:24,cola500:24,sprite300:24,sprite500:24,fanta300:24,fanta500:24,
+};
+
+// ══════════════════════
+// STATE
+// ══════════════════════
+window.DB=null;window._curPage='dash';window._lastSave=0;
+let CU=null,SF=null,PQ=1,MQ=1,WQ=1;
+const BSQ={},DSQ={};const ST={};
+let lastList='',_auditCalc=null,_editFillId=null;
+
+function buildDefaultDB(){
+  const db={
+    users:[
+      {id:'jefe',name:'Jefe',username:'jefe',password:'Cinco2025!',role:'owner',lang:'en',active:true},
+      {id:'director',name:'Director',username:'director',password:'Dir2025!',role:'manager',lang:'es',active:true},
+    ],
+    master_key:'CP-Master-2025',
+    stock:{},packing:{},finished:{},bottles:{maracuya:0,water:0},commercial:{},
+    log:[],audits:[],instructions:[],
+    ings:[...DEF_INGS],pack:[...DEF_PACK],comm:[...DEF_COMM],
+    fills:DEF_FILL.map(f=>({...f,ing:{...f.ing}})),
+  };
+  DEF_INGS.forEach(i=>db.stock[i.id]=0);
+  DEF_PACK.forEach(p=>db.packing[p.id]=0);
+  DEF_COMM.forEach(c=>db.commercial[c.id]=0);
+  DEF_FILL.forEach(f=>db.finished[f.id]=0);
+  return db;
+}
+
+function mergeDefaults(db){
+  if(!db.ings)db.ings=[...DEF_INGS];
+  if(!db.pack)db.pack=[...DEF_PACK];
+  if(!db.comm)db.comm=[...DEF_COMM];
+  if(!db.fills)db.fills=DEF_FILL.map(f=>({...f,ing:{...f.ing}}));
+  if(!db.bottles)db.bottles={maracuya:0,water:0};
+  if(!db.finished)db.finished={};
+  if(!db.log)db.log=[];
+  if(!db.audits)db.audits=[];
+  if(!db.instructions)db.instructions=[];
+  // Add missing default ingredients
+  DEF_INGS.forEach(i=>{if(!db.ings.find(x=>x.id===i.id)){db.ings.push(i);if(db.stock[i.id]===undefined)db.stock[i.id]=0;}});
+  // Migrate old stickers to logo_stk
+  const hasLogo=db.pack.find(x=>x.id==='logo_stk');
+  if(!hasLogo){
+    ['stk_bun','stk_bot','stk_del'].forEach(old=>{db.pack=db.pack.filter(x=>x.id!==old);delete db.packing[old];});
+    db.pack.splice(4,0,{id:'logo_stk',en:'Logo Stickers',es:'Stickers Logo',unit:'units'});
+    db.packing['logo_stk']=0;
+  }
+  DEF_PACK.forEach(p=>{if(!db.pack.find(x=>x.id===p.id)){db.pack.push(p);if(db.packing[p.id]===undefined)db.packing[p.id]=0;}});
+  DEF_COMM.forEach(c=>{if(!db.comm.find(x=>x.id===c.id)){db.comm.push(c);if(!db.commercial)db.commercial={};db.commercial[c.id]=0;}});
+  DEF_FILL.forEach(f=>{if(db.finished[f.id]===undefined)db.finished[f.id]=0;});
+  return db;
+}
+
+async function saveDB(){window._lastSave=Date.now();await window._fbSave(window.DB);}
+
+window._initApp=function(data){
+  window.DB=data?mergeDefaults(data):buildDefaultDB();
+  document.getElementById('pg-load').style.display='none';
+  document.getElementById('pg-login').style.display='flex';
+  if(!data)saveDB();
+  document.getElementById('li-p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  document.getElementById('li-u').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  const ad=document.getElementById('au-date');if(ad)ad.value=new Date().toISOString().slice(0,10);
+  applyLang();
+};
+
+window._rerender=function(p){
+  ({dash:renderDash,stock:renderStock,prod:renderProd,drinks:renderDrinks,
+    sales:renderSales,loss:renderLoss,shop:buildShopInputs,log:renderLog,
+    inv:renderInv,tasks:renderTasks,users:renderUsers})[p]?.();
+};
+
+// ══════════════════════
+// AUTH
+// ══════════════════════
+function doLogin(){
+  const u=document.getElementById('li-u').value.trim().toLowerCase();
+  const p=document.getElementById('li-p').value;
+  const lg=document.getElementById('li-lang').value;
+  document.getElementById('li-err').style.display='none';
+  const mk=window.DB.master_key||'';
+  if(p===mk&&mk!==''){const tgt=window.DB.users.find(x=>x.username.toLowerCase()===u);if(tgt){CU={...tgt,lang:lg};startApp();return;}}
+  const usr=window.DB.users.find(x=>x.username.toLowerCase()===u&&x.password===p&&x.active);
+  if(usr){CU={...usr,lang:lg};const idx=window.DB.users.findIndex(x=>x.id===usr.id);if(idx>=0)window.DB.users[idx].lang=lg;saveDB();startApp();}
+  else{document.getElementById('li-err').style.display='block';setTimeout(()=>document.getElementById('li-err').style.display='none',3000);}
+}
+
+function startApp(){
+  LG=CU.lang||'en';applyLang();
+  document.getElementById('pg-login').style.display='none';
+  document.getElementById('pg-app').style.display='flex';
+  document.getElementById('pg-app').style.flexDirection='column';
+  document.getElementById('pg-app').style.minHeight='100vh';
+  document.getElementById('t-av').textContent=CU.name.charAt(0).toUpperCase();
+  document.getElementById('t-nm').textContent=CU.name;
+  const rk=CU.role==='owner'?'o':CU.role==='manager'?'m':'w';
+  document.getElementById('t-role').textContent=t('r'+rk);
+  document.getElementById('t-role').className='trole r'+rk;
+  const isAdmin=CU.role==='owner'||CU.role==='manager';
+  document.getElementById('nb-users').style.display=isAdmin?'block':'none';
+  document.getElementById('nb-inv').style.display=isAdmin?'block':'none';
+  document.getElementById('ttab-send').style.display=isAdmin?'block':'none';
+  const ad=document.getElementById('au-date');if(ad)ad.value=new Date().toISOString().slice(0,10);
+  populateLogFilter();buildShopInputs();sp('dash');
+}
+
+function doLogout(){
+  CU=null;LG='en';
+  document.getElementById('pg-app').style.display='none';
+  document.getElementById('pg-login').style.display='flex';
+  document.getElementById('li-u').value='';document.getElementById('li-p').value='';
+  applyLang();
+}
+
+// ══════════════════════
+// NAV
+// ══════════════════════
+function sp(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('act'));
+  document.getElementById('pg-'+id)?.classList.add('act');
+  document.querySelector(`[data-p="${id}"]`)?.classList.add('act');
+  window._curPage=id;
+  ({dash:renderDash,stock:renderStock,prod:renderProd,drinks:renderDrinks,
+    sales:renderSales,loss:renderLoss,shop:buildShopInputs,log:renderLog,
+    inv:renderInv,tasks:renderTasks,users:renderUsers})[id]?.();
+}
+function stTab(id,btn){qT('pg-stock',btn);document.getElementById('stbc-'+id).classList.add('act');if(id==='comm')renderCommGrid();}
+function drTab(id,btn){qT('pg-drinks',btn);document.getElementById('dtbc-'+id).classList.add('act');if(id==='cs')renderCommDrinks();if(id==='fin')renderFinBottles();}
+function saTab(id,btn){qT('pg-sales',btn);document.getElementById('satbc-'+id).classList.add('act');if(id==='drs')renderDrinkSF();}
+function lossTab(id,btn){qT('pg-loss',btn);document.getElementById('ltbc-'+id).classList.add('act');if(id==='audit'){populateAuditIng();renderAuditHistory();renderAvgGrid();}}
+function shTab(id,btn){qT('pg-shop',btn);document.getElementById('shtbc-'+id).classList.add('act');}
+function invTab(id,btn){qT('pg-inv',btn);document.getElementById('invtbc-'+id).classList.add('act');renderInvTab(id);}
+function qT(pg,btn){const p=document.getElementById(pg);p.querySelectorAll('.tabb').forEach(b=>b.classList.remove('act'));p.querySelectorAll('.tbc').forEach(c=>c.classList.remove('act'));btn.classList.add('act');}
+
+// ══════════════════════
+// HELPERS
+// ══════════════════════
+const DB=()=>window.DB;
+function iN(id){const i=DB().ings.find(x=>x.id===id);return i?(LG==='es'?i.es:i.en):id;}
+function fN(f){return LG==='es'?f.es:f.en;}
+function pN(p){return LG==='es'?p.es:p.en;}
+function cN(c){return LG==='es'?c.es:c.en;}
+function sts(a,r){if(a===0)return'sempty';const x=a/(r||500);return x<=0.1?'scrit':x<=0.25?'slow':'sok';}
+
+function getAvgLoss(ingId){
+  const audits=(DB().audits||[]).filter(a=>a.ing===ingId&&a.before>0);
+  if(!audits.length)return null;
+  return(audits.reduce((s,a)=>s+(a.pct||0),0)/audits.length).toFixed(1);
+}
+
+function siCard(name,a,unit,ref,ingId=null,canDel=false,delFn=''){
+  const s=sts(a,ref||500);const pct=Math.min(100,a/(ref||500)*100).toFixed(0);
+  const avg=ingId?getAvgLoss(ingId):null;
+  const avgB=avg?`<span class="avg-badge">⚖️ ${avg}% ${t('avg_loss')}</span>`:'';
+  const delB=canDel?`<button class="del-x" onclick="${delFn}">×</button>`:'';
+  return`<div class="si ${s}">${delB}<div class="sdot"></div><div class="siname">${name}${avgB}</div><div class="siamt">${typeof a==='number'&&a%1!==0?a.toFixed(2):a} <span class="siunit">${unit}</span></div><div class="sibar"><div class="sifill" style="width:${pct}%"></div></div></div>`;
+}
+
+function getFillings(){return DB().fills||DEF_FILL;}
+function maxBuns(f){let m=Infinity;for(const[k,n]of Object.entries(f.ing||{}))m=Math.min(m,Math.floor((DB().stock[k]||0)/n));return Math.max(0,m===Infinity?0:m);}
+function fmtT(ts){return new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function fmtDT(ts){const d=new Date(ts);return d.toLocaleDateString([],{day:'2-digit',month:'2-digit'})+' '+fmtT(ts);}
+function addLog(type,qty,details){if(!DB().log)DB().log=[];DB().log.push({id:Date.now(),time:Date.now(),user:CU.name,userId:CU.id,type,qty,details});if(DB().log.length>600)DB().log=DB().log.slice(-600);}
+
+// ══════════════════════
+// DASHBOARD
+// ══════════════════════
+function renderDash(){
+  let ac='';let ok=true;
+  DB().ings.forEach(ing=>{
+    const a=DB().stock[ing.id]||0;const r=REF_LVL[ing.id]||500;const rat=a/r;
+    const nm=LG==='es'?ing.es:ing.en;
+    if(a===0){ac+=`<div class="alert ared">🔴 <strong>${nm}</strong> — ${t('a_out')}</div>`;ok=false;}
+    else if(rat<=0.1){ac+=`<div class="alert ared">⚠️ <strong>${nm}</strong> — ${t('a_crit')} (${a} ${t('rem')})</div>`;ok=false;}
+    else if(rat<=0.25){ac+=`<div class="alert aamb">🟡 <strong>${nm}</strong> — ${t('a_low')} (${a} ${t('rem')})</div>`;ok=false;}
+  });
+  if(ok)ac=`<div class="alert agrn">✅ ${t('a_ok')}</div>`;
+  document.getElementById('alert-box').innerHTML=ac;
+  const today=new Date().toDateString();
+  const tl=(DB().log||[]).filter(l=>new Date(l.time).toDateString()===today);
+  const tp=tl.filter(l=>l.type==='production').reduce((s,l)=>s+l.qty,0);
+  const ts2=tl.filter(l=>l.type==='sale').reduce((s,l)=>s+l.qty,0);
+  const tls=tl.filter(l=>l.type==='loss'||l.type==='audit').reduce((s,l)=>s+l.qty,0);
+  const tf=Object.values(DB().finished||{}).reduce((s,v)=>s+v,0);
+  document.getElementById('stats-box').innerHTML=
+    `<div class="sc"><div class="slbl">${t('stat_prod')}</div><div class="sval">${tp}</div><div class="ssub">${t('buns')}</div></div>`+
+    `<div class="sc"><div class="slbl">${t('stat_sold')}</div><div class="sval">${ts2}</div><div class="ssub">${t('buns')}</div></div>`+
+    `<div class="sc"><div class="slbl">${t('stat_ready')}</div><div class="sval">${tf}</div><div class="ssub">${t('buns')}</div></div>`+
+    `<div class="sc"><div class="slbl">${t('stat_loss')}</div><div class="sval" style="color:${tls>0?'var(--r)':'var(--brown)'}">${tls}</div></div>`+
+    `<div class="sc"><div class="slbl">${t('stat_ev')}</div><div class="sval">${tl.length}</div></div>`;
+  document.getElementById('cap-grid').innerHTML=getFillings().map(f=>{
+    const n=maxBuns(f);const s=n===0?'sempty':n<5?'scrit':n<15?'slow':'sok';
+    return`<div class="si ${s}"><div class="sdot"></div><div class="siname">${f.emoji} ${fN(f)}</div><div class="siamt">${n} <span class="siunit">${t('buns')}</span></div><div class="sibar"><div class="sifill" style="width:${Math.min(100,n/50*100).toFixed(0)}%"></div></div></div>`;
+  }).join('');
+  const tb=document.getElementById('tod-box');
+  if(!tl.length){tb.innerHTML=`<div class="empty">${LG==='es'?'Sin actividad hoy.':'No activity today yet.'}</div>`;return;}
+  tb.innerHTML=[...tl].reverse().slice(0,6).map(l=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+      <span class="tag t${l.type==='production'?'prod':l.type==='sale'?'sale':l.type==='drinks'?'drink':l.type==='audit'?'audit':l.type==='loss'?'loss':'stock'}">${l.type}</span>
+      <span style="font-size:12px;flex:1">${l.details}</span>
+      <span style="font-size:11px;color:var(--txm);white-space:nowrap">${l.user} · ${fmtT(l.time)}</span>
+    </div>`).join('');
+}
+
+// ══════════════════════
+// STOCK
+// ══════════════════════
+function renderStock(){
+  document.getElementById('ing-grid').innerHTML=DB().ings.map(ing=>{
+    const a=DB().stock[ing.id]||0;const nm=LG==='es'?ing.es:ing.en;
+    return siCard(nm,a,ing.unit,REF_LVL[ing.id]||500,ing.id,true,`delIng('${ing.id}')`);
+  }).join('');
+  document.getElementById('pack-grid').innerHTML=DB().pack.map(p=>{
+    return siCard(pN(p),DB().packing[p.id]||0,p.unit,REF_LVL[p.id]||100,null,true,`delPack('${p.id}')`);
+  }).join('');
+  renderCommGrid();
+  const sel=document.getElementById('mst-sel');
+  sel.innerHTML=[
+    ...DB().ings.map(i=>`<option value="ing_${i.id}">${LG==='es'?i.es:i.en} (${i.unit})</option>`),
+    ...DB().pack.map(p=>`<option value="pk_${p.id}">${pN(p)} (${p.unit})</option>`),
+    ...DB().comm.map(c=>`<option value="cm_${c.id}">${cN(c)}</option>`),
+    `<option value="bot_maracuya">Maracuyá (${t('bots')})</option>`,
+    `<option value="bot_water">${t('nat_water')} (${t('bots')})</option>`,
+  ].join('');
+}
+function renderCommGrid(){
+  document.getElementById('comm-grid').innerHTML=DB().comm.map(c=>{
+    return siCard(cN(c),DB().commercial[c.id]||0,t('units'),REF_LVL[c.id]||24,null,true,`delComm('${c.id}')`);
+  }).join('');
+}
+function openStockModal(){renderStock();document.getElementById('mst-amt').value='';om('m-stock');}
+async function saveStock(){
+  const raw=document.getElementById('mst-sel').value;
+  const amt=parseFloat(document.getElementById('mst-amt').value);
+  const act=document.getElementById('mst-ac').value;
+  if(isNaN(amt)||amt<0){toast(t('fill_all'));return;}
+  const sa=(cur)=>act==='set'?amt:(cur||0)+amt;
+  let det='';
+  if(raw.startsWith('ing_')){const k=raw.slice(4);DB().stock[k]=sa(DB().stock[k]);det=`${iN(k)} → ${act==='set'?'=':'+'}${amt}`;}
+  else if(raw.startsWith('pk_')){const k=raw.slice(3);DB().packing[k]=sa(DB().packing[k]);const p=DB().pack.find(x=>x.id===k);det=`${pN(p)} → ${act==='set'?'=':'+'}${amt}`;}
+  else if(raw.startsWith('cm_')){const k=raw.slice(3);DB().commercial[k]=sa(DB().commercial[k]);const c=DB().comm.find(x=>x.id===k);det=`${cN(c)} → ${act==='set'?'=':'+'}${amt}`;}
+  else if(raw==='bot_maracuya'){DB().bottles.maracuya=sa(DB().bottles.maracuya);det=`Maracuyá ${t('bots')} → ${act==='set'?'=':'+'}${amt}`;}
+  else if(raw==='bot_water'){DB().bottles.water=sa(DB().bottles.water);det=`Water ${t('bots')} → ${act==='set'?'=':'+'}${amt}`;}
+  addLog('stock',0,det);await saveDB();cm('m-stock');renderStock();toast(t('stock_ok'));
+}
+
+// ══════════════════════
+// INVENTORY MANAGEMENT
+// ══════════════════════
+function renderInv(){renderInvTab('ing');}
+function renderInvTab(id){
+  if(id==='ing')renderIngList();
+  else if(id==='pack')renderPackList();
+  else if(id==='comm')renderCommList();
+  else if(id==='fill')renderFillPicker();
+}
+
+function renderIngList(){
+  document.getElementById('ing-manage-list').innerHTML=DB().ings.map(ing=>`
+    <div class="inv-item">
+      <span class="inv-item-name">${LG==='es'?ing.es:ing.en}</span>
+      <input type="text" value="${ing.unit}" onchange="changeIngUnit('${ing.id}',this.value)"
+        style="width:52px;padding:3px 6px;border:1px solid var(--bd);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;text-align:center;outline:none;">
+      <button class="btn bd2 bsm" onclick="delIng('${ing.id}')">🗑</button>
+    </div>`).join('');
+}
+async function changeIngUnit(id,val){
+  val=(val||'').trim();if(!val)return;
+  const ing=DB().ings.find(x=>x.id===id);if(ing)ing.unit=val;
+  await saveDB();renderIngList();renderStock();
+}
+function renderPackList(){
+  document.getElementById('pack-manage-list').innerHTML=DB().pack.map(p=>`
+    <div class="inv-item">
+      <span class="inv-item-name">${pN(p)}</span>
+      <input type="text" value="${p.unit}" onchange="changePackUnit('${p.id}',this.value)"
+        style="width:52px;padding:3px 6px;border:1px solid var(--bd);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:11px;text-align:center;outline:none;">
+      <button class="btn bd2 bsm" onclick="delPack('${p.id}')">🗑</button>
+    </div>`).join('');
+}
+async function changePackUnit(id,val){
+  val=(val||'').trim();if(!val)return;
+  const p=DB().pack.find(x=>x.id===id);if(p)p.unit=val;
+  await saveDB();renderPackList();renderStock();
+}
+function renderCommList(){
+  document.getElementById('comm-manage-list').innerHTML=DB().comm.map(c=>`
+    <div class="inv-item">
+      <span class="inv-item-name">${cN(c)}</span>
+      <span class="inv-item-unit">${t('units')}</span>
+      <button class="btn bd2 bsm" onclick="delComm('${c.id}')">🗑</button>
+    </div>`).join('');
+}
+
+async function addIng(){
+  const name=document.getElementById('new-ing-name').value.trim();
+  const unit=document.getElementById('new-ing-unit').value.trim()||'g';
+  if(!name){toast(t('fill_all'));return;}
+  const id='ci_'+Date.now();
+  DB().ings.push({id,en:name,es:name,unit,custom:true});DB().stock[id]=0;
+  document.getElementById('new-ing-name').value='';document.getElementById('new-ing-unit').value='';
+  await saveDB();renderIngList();renderStock();toast(`"${name}" added`);
+}
+async function addPack(){
+  const name=document.getElementById('new-pack-name').value.trim();
+  const unit=document.getElementById('new-pack-unit').value.trim()||'units';
+  if(!name){toast(t('fill_all'));return;}
+  const id='cp_'+Date.now();
+  DB().pack.push({id,en:name,es:name,unit,custom:true});DB().packing[id]=0;
+  document.getElementById('new-pack-name').value='';document.getElementById('new-pack-unit').value='';
+  await saveDB();renderPackList();renderStock();toast(`"${name}" added`);
+}
+async function addComm(){
+  const name=document.getElementById('new-comm-name').value.trim();
+  if(!name){toast(t('fill_all'));return;}
+  const id='cc_'+Date.now();
+  DB().comm.push({id,en:name,es:name,custom:true});DB().commercial[id]=0;
+  document.getElementById('new-comm-name').value='';
+  await saveDB();renderCommList();renderCommGrid();toast(`"${name}" added`);
+}
+
+async function delIng(id){
+  if(!confirm(LG==='es'?'¿Eliminar este ingrediente?':'Delete this ingredient?'))return;
+  DB().ings=DB().ings.filter(x=>x.id!==id);delete DB().stock[id];
+  // Remove from all filling recipes
+  (DB().fills||[]).forEach(f=>{if(f.ing)delete f.ing[id];});
+  await saveDB();renderIngList();renderStock();toast(LG==='es'?'Eliminado':'Deleted');
+}
+async function delPack(id){
+  if(!confirm(LG==='es'?'¿Eliminar?':'Delete?'))return;
+  DB().pack=DB().pack.filter(x=>x.id!==id);delete DB().packing[id];
+  await saveDB();renderPackList();renderStock();toast(LG==='es'?'Eliminado':'Deleted');
+}
+async function delComm(id){
+  if(!confirm(LG==='es'?'¿Eliminar?':'Delete?'))return;
+  DB().comm=DB().comm.filter(x=>x.id!==id);delete DB().commercial[id];
+  await saveDB();renderCommList();renderCommGrid();toast(LG==='es'?'Eliminado':'Deleted');
+}
+
+// FILLING RECIPE EDITOR
+function renderFillPicker(){
+  document.getElementById('fill-recipe-editor').style.display='none';
+  document.getElementById('fill-pick').innerHTML=getFillings().map(f=>`
+    <div class="fc" onclick="editFilling('${f.id}')"><div class="fce">${f.emoji}</div><div class="fcn">${fN(f)}</div></div>`).join('');
+}
+
+function editFilling(id){
+  _editFillId=id;
+  const f=getFillings().find(x=>x.id===id);if(!f)return;
+  document.getElementById('fill-recipe-title').textContent=`${f.emoji} ${fN(f)}`;
+  document.getElementById('fill-recipe-editor').style.display='block';
+  // Populate ing dropdown
+  const sel=document.getElementById('fill-add-ing');
+  sel.innerHTML=DB().ings.map(i=>`<option value="${i.id}">${LG==='es'?i.es:i.en}</option>`).join('');
+  renderFillRecipe(f);
+}
+
+function renderFillRecipe(f){
+  document.getElementById('fill-recipe-list').innerHTML=Object.entries(f.ing||{}).map(([ingId,qty])=>`
+    <div class="inv-item">
+      <span class="inv-item-name">${iN(ingId)}</span>
+      <span class="inv-item-unit">${qty}g</span>
+      <button class="btn bd2 bsm" onclick="removeFillIng('${ingId}')">× Remove</button>
+    </div>`).join('');
+}
+
+async function addFillIng(){
+  const ingId=document.getElementById('fill-add-ing').value;
+  const qty=parseFloat(document.getElementById('fill-add-qty').value)||0;
+  if(!ingId||qty<=0){toast(t('fill_all'));return;}
+  const f=getFillings().find(x=>x.id===_editFillId);if(!f)return;
+  if(!f.ing)f.ing={};
+  f.ing[ingId]=qty;
+  document.getElementById('fill-add-qty').value='';
+  await saveDB();renderFillRecipe(f);toast(LG==='es'?'Ingrediente agregado':'Ingredient added');
+}
+
+async function removeFillIng(ingId){
+  const f=getFillings().find(x=>x.id===_editFillId);if(!f||!f.ing)return;
+  delete f.ing[ingId];
+  await saveDB();renderFillRecipe(f);
+}
+
+// ══════════════════════
+// PRODUCTION
+// ══════════════════════
+function renderProd(){
+  SF=null;PQ=1;document.getElementById('pr-qty').textContent='1';
+  document.getElementById('pr-prev').style.display='none';
+  document.getElementById('fill-sel').innerHTML=getFillings().map(f=>`
+    <div class="fc" id="fc-${f.id}" onclick="selF('${f.id}')"><div class="fce">${f.emoji}</div><div class="fcn">${fN(f)}</div></div>`).join('');
+}
+function selF(id){SF=getFillings().find(f=>f.id===id);document.querySelectorAll('.fc').forEach(c=>c.classList.remove('sel'));document.getElementById('fc-'+id)?.classList.add('sel');updPrev();}
+function chQ(d){PQ=Math.max(1,PQ+d);document.getElementById('pr-qty').textContent=PQ;updPrev();}
+function updPrev(){
+  if(!SF)return;
+  document.getElementById('pr-prev').style.display='block';
+  document.getElementById('pr-dlist').innerHTML=
+    Object.entries(SF.ing||{}).map(([k,n])=>{
+      const need=n*PQ;const have=DB().stock[k]||0;const ok=have>=need;
+      const ing=DB().ings.find(x=>x.id===k);
+      return`<div class="prow" style="${!ok?'color:var(--r)':''}"><span>${iN(k)}</span><span style="font-weight:500">−${need}${ing?.unit||'g'} (${t('have')}: ${have}) ${!ok?'⚠️':'✓'}</span></div>`;
+    }).join('')+
+    `<div class="prow" style="color:var(--txs);margin-top:5px"><span>${t('logo_stk')} + antigrease</span><span>−${PQ} each</span></div>`;
+}
+async function logProd(){
+  if(!SF){toast(t('no_fill'));return;}
+  for(const[k,n]of Object.entries(SF.ing||{})){if((DB().stock[k]||0)<n*PQ){toast(`${t('ne')}: ${iN(k)}`);return;}}
+  for(const[k,n]of Object.entries(SF.ing||{}))DB().stock[k]=(DB().stock[k]||0)-(n*PQ);
+  DB().packing['antigrease']=Math.max(0,(DB().packing['antigrease']||0)-PQ);
+  DB().packing['tissues']=Math.max(0,(DB().packing['tissues']||0)-(PQ*4/500));
+  const stkId=FILL_STK[SF.id];if(stkId&&DB().packing[stkId]!==undefined)DB().packing[stkId]=Math.max(0,(DB().packing[stkId]||0)-PQ);
+  DB().finished[SF.id]=(DB().finished[SF.id]||0)+PQ;
+  addLog('production',PQ,`${LG==='es'?'Producidos':'Produced'} ${PQ} × ${fN(SF)}`);
+  await saveDB();toast(t('prod_ok'));renderProd();
+}
+
+// ══════════════════════
+// DRINKS
+// ══════════════════════
+function renderDrinks(){updMarPrev();updWatPrev();}
+function chMar(d){MQ=Math.max(1,MQ+d);document.getElementById('mar-qty').textContent=MQ;updMarPrev();}
+function updMarPrev(){
+  const nP=1000*MQ,nS=150*MQ,nW=0.45*MQ,nSt=3*MQ;
+  const hP=DB().stock['Maracuya Pulp']||0,hS=DB().stock['Sugar']||0,hW=DB().stock['Water']||0,hSt=DB().packing['logo_stk']||0;
+  document.getElementById('mar-prev').innerHTML=
+    `<div class="prow" style="${hP<nP?'color:var(--r)':''}"><span>${iN('Maracuya Pulp')}</span><span>−${nP}g (${t('have')}: ${hP}g) ${hP<nP?'⚠️':'✓'}</span></div>`+
+    `<div class="prow" style="${hS<nS?'color:var(--r)':''}"><span>${iN('Sugar')}</span><span>−${nS}g (${t('have')}: ${hS}g) ${hS<nS?'⚠️':'✓'}</span></div>`+
+    `<div class="prow" style="${hW<nW?'color:var(--r)':''}"><span>${iN('Water')}</span><span>−${nW.toFixed(2)}L (${t('have')}: ${hW}L) ${hW<nW?'⚠️':'✓'}</span></div>`+
+    `<div class="prow" style="${hSt<nSt?'color:var(--r)':''}"><span>${t('logo_stk')}</span><span>−${nSt} (${t('have')}: ${hSt}) ${hSt<nSt?'⚠️':'✓'}</span></div>`+
+    `<div style="margin-top:8px;font-weight:500;font-size:12px;color:${(hP>=nP&&hS>=nS&&hW>=nW&&hSt>=nSt)?'var(--g)':'var(--am)'}">→ ${t('will')} ${3*MQ} ${t('bots')}</div>`;
+}
+async function logMar(){
+  const nP=1000*MQ,nS=150*MQ,nW=0.45*MQ;
+  if((DB().stock['Maracuya Pulp']||0)<nP){toast(`${t('ne')}: ${iN('Maracuya Pulp')}`);return;}
+  if((DB().stock['Sugar']||0)<nS){toast(`${t('ne')}: ${iN('Sugar')}`);return;}
+  if((DB().stock['Water']||0)<nW){toast(`${t('ne')}: ${iN('Water')}`);return;}
+  DB().stock['Maracuya Pulp']-=nP;DB().stock['Sugar']-=nS;DB().stock['Water']-=nW;
+  DB().packing['logo_stk']=Math.max(0,(DB().packing['logo_stk']||0)-(3*MQ));
+  DB().bottles.maracuya=(DB().bottles.maracuya||0)+(3*MQ);
+  addLog('drinks',3*MQ,`Maracuyá: ${3*MQ} ${t('bots')} (${MQ} ${LG==='es'?'lotes':'batches'})`);
+  await saveDB();toast(t('prod_ok'));MQ=1;document.getElementById('mar-qty').textContent='1';updMarPrev();
+}
+function chWat(d){WQ=Math.max(1,WQ+d);document.getElementById('wat-qty').textContent=WQ;updWatPrev();}
+function updWatPrev(){
+  const hW=DB().stock['Water']||0,hSt=DB().packing['logo_stk']||0,bots=WQ*2;
+  document.getElementById('wat-prev').innerHTML=
+    `<div class="prow" style="${hW<WQ?'color:var(--r)':''}"><span>${iN('Water')}</span><span>−${WQ}L (${t('have')}: ${hW}L) ${hW<WQ?'⚠️':'✓'}</span></div>`+
+    `<div class="prow" style="${hSt<bots?'color:var(--r)':''}"><span>${t('logo_stk')}</span><span>−${bots} (${t('have')}: ${hSt}) ${hSt<bots?'⚠️':'✓'}</span></div>`+
+    `<div style="margin-top:8px;font-weight:500;font-size:12px;color:${(hW>=WQ&&hSt>=bots)?'var(--g)':'var(--am)'}">→ ${t('will')} ${bots} ${t('bots')}</div>`;
+}
+async function logWat(){
+  if((DB().stock['Water']||0)<WQ){toast(`${t('ne')}: ${iN('Water')}`);return;}
+  DB().stock['Water']-=WQ;
+  DB().packing['logo_stk']=Math.max(0,(DB().packing['logo_stk']||0)-(WQ*2));
+  DB().bottles.water=(DB().bottles.water||0)+(WQ*2);
+  addLog('drinks',WQ*2,`${LG==='es'?'Agua embotellada':'Water bottled'}: ${WQ*2} ${t('bots')}`);
+  await saveDB();toast(t('prod_ok'));WQ=1;document.getElementById('wat-qty').textContent='1';updWatPrev();
+}
+function renderCommDrinks(){document.getElementById('cs-grid').innerHTML=DB().comm.map(c=>siCard(cN(c),DB().commercial[c.id]||0,t('units'),REF_LVL[c.id]||24)).join('');}
+function renderFinBottles(){
+  document.getElementById('fin-grid').innerHTML=
+    siCard('🍹 Maracuyá',DB().bottles.maracuya||0,t('bots'),12)+
+    siCard(`💧 ${t('nat_water')}`,DB().bottles.water||0,t('bots'),12);
+}
+function openCommModal(){
+  document.getElementById('mco-form').innerHTML=DB().comm.map(c=>`
+    <div class="frow" style="margin-bottom:8px;align-items:center">
+      <div style="font-size:12px;font-weight:500">${cN(c)}</div>
+      <div class="fg" style="margin-bottom:0"><input type="number" id="cm-${c.id}" value="${DB().commercial[c.id]||0}" min="0"></div>
+    </div>`).join('');om('m-comm');
+}
+async function saveComm(){
+  DB().comm.forEach(c=>{const el=document.getElementById('cm-'+c.id);if(el)DB().commercial[c.id]=parseFloat(el.value)||0;});
+  addLog('stock',0,LG==='es'?'Stock comercial actualizado':'Commercial stock updated');
+  await saveDB();cm('m-comm');renderCommDrinks();renderCommGrid();toast(t('stock_ok'));
+}
+
+// ══════════════════════
+// SALES
+// ══════════════════════
+function renderSales(){renderBunSF();renderDrinkSF();renderFinBuns();}
+function renderBunSF(){
+  document.getElementById('bun-sf').innerHTML=getFillings().map(f=>{
+    const a=DB().finished[f.id]||0;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+      <span style="font-size:19px">${f.emoji}</span>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${fN(f)}</div><div style="font-size:11px;color:var(--txm)">${a} ${t('avail')}</div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="qb" style="width:27px;height:27px;font-size:15px" onclick="chBSQ('${f.id}',-1)">−</button>
+        <span style="font-family:'Playfair Display',serif;font-size:17px;min-width:25px;text-align:center" id="bsq-${f.id}">${BSQ[f.id]||0}</span>
+        <button class="qb" style="width:27px;height:27px;font-size:15px" onclick="chBSQ('${f.id}',1)">+</button>
+      </div>
+    </div>`;}).join('');
+}
+function renderFinBuns(){
+  document.getElementById('finb-grid').innerHTML=getFillings().map(f=>{
+    const a=DB().finished[f.id]||0;const s=a===0?'sempty':a<3?'scrit':a<8?'slow':'sok';
+    return`<div class="si ${s}"><div class="sdot"></div><div class="siname">${f.emoji} ${fN(f)}</div><div class="siamt">${a} <span class="siunit">${t('buns')}</span></div></div>`;
+  }).join('');
+}
+function chBSQ(id,d){const a=DB().finished[id]||0;BSQ[id]=Math.max(0,Math.min(a,(BSQ[id]||0)+d));document.getElementById('bsq-'+id).textContent=BSQ[id];}
+async function logBunSale(){
+  const items=[];let tot=0;
+  for(const f of getFillings()){const q=BSQ[f.id]||0;if(q>0){if((DB().finished[f.id]||0)<q){toast(`${t('ne')}: ${fN(f)}`);return;}DB().finished[f.id]-=q;items.push(`${q}×${fN(f)}`);tot+=q;BSQ[f.id]=0;}}
+  if(!tot){toast(t('no_buns'));return;}
+  // 1 food bag + 1 logo sticker per bun sale delivery
+  DB().packing['bag_food']=Math.max(0,(DB().packing['bag_food']||0)-1);
+  DB().packing['logo_stk']=Math.max(0,(DB().packing['logo_stk']||0)-1);
+  addLog('sale',tot,`${LG==='es'?'Vendidos':'Sold'}: ${items.join(', ')}`);
+  await saveDB();toast(t('sale_ok'));renderSales();
+}
+function renderDrinkSF(){
+  const all=[
+    {id:'bm',emoji:'🍹',name:'Maracuyá 500ml',avail:DB().bottles.maracuya||0},
+    {id:'bw',emoji:'💧',name:`${t('nat_water')} 500ml`,avail:DB().bottles.water||0},
+    ...DB().comm.map(c=>({id:c.id,emoji:'🥤',name:cN(c),avail:DB().commercial[c.id]||0})),
+  ];
+  document.getElementById('drink-sf').innerHTML=all.map(d=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+      <span style="font-size:19px">${d.emoji}</span>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${d.name}</div><div style="font-size:11px;color:var(--txm)">${d.avail} ${t('avail')}</div></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="qb" style="width:27px;height:27px;font-size:15px" onclick="chDSQ('${d.id}',-1)">−</button>
+        <span style="font-family:'Playfair Display',serif;font-size:17px;min-width:25px;text-align:center" id="dsq-${d.id}">${DSQ[d.id]||0}</span>
+        <button class="qb" style="width:27px;height:27px;font-size:15px" onclick="chDSQ('${d.id}',1)">+</button>
+      </div>
+    </div>`).join('');
+}
+function chDSQ(id,d){
+  const a=id==='bm'?DB().bottles.maracuya||0:id==='bw'?DB().bottles.water||0:DB().commercial[id]||0;
+  DSQ[id]=Math.max(0,Math.min(a,(DSQ[id]||0)+d));document.getElementById('dsq-'+id).textContent=DSQ[id];
+}
+async function logDrinkSale(){
+  const items=[];let tot=0;
+  if(DSQ['bm']){DB().bottles.maracuya=Math.max(0,(DB().bottles.maracuya||0)-DSQ['bm']);items.push(`${DSQ['bm']}×Maracuyá`);tot+=DSQ['bm'];DSQ['bm']=0;}
+  if(DSQ['bw']){DB().bottles.water=Math.max(0,(DB().bottles.water||0)-DSQ['bw']);items.push(`${DSQ['bw']}×${t('nat_water')}`);tot+=DSQ['bw'];DSQ['bw']=0;}
+  DB().comm.forEach(c=>{const q=DSQ[c.id]||0;if(q>0){DB().commercial[c.id]=Math.max(0,(DB().commercial[c.id]||0)-q);items.push(`${q}×${c.en}`);tot+=q;DSQ[c.id]=0;}});
+  if(!tot){toast(t('no_drinks'));return;}
+  // 1 drink bag + 1 logo sticker per drink sale delivery
+  DB().packing['bag_drink']=Math.max(0,(DB().packing['bag_drink']||0)-1);
+  DB().packing['logo_stk']=Math.max(0,(DB().packing['logo_stk']||0)-1);
+  addLog('drinks',tot,`${LG==='es'?'Bebidas vendidas':'Drinks sold'}: ${items.join(', ')}`);
+  await saveDB();toast(t('sale_ok'));renderDrinkSF();
+}
+
+// ══════════════════════
+// LOSS
+// ══════════════════════
+function renderLoss(){
+  const lt=t('loss_types');
+  document.getElementById('ls-type').innerHTML=`<option value="bun">${lt.bun}</option><option value="ingredient">${lt.ingredient}</option><option value="packing">${lt.packing}</option><option value="bottle">${lt.bottle||'Bottle'}</option><option value="commercial">${lt.commercial}</option>`;
+  renderLossItems();renderLossTable();
+}
+function renderLossItems(){
+  const type=document.getElementById('ls-type')?.value||'bun';
+  const lt=t('loss_types');let items=[];
+  if(type==='bun')items=getFillings().map(f=>({id:f.id,name:`${f.emoji} ${fN(f)}`,max:DB().finished[f.id]||0}));
+  else if(type==='ingredient')items=DB().ings.map(i=>({id:i.id,name:LG==='es'?i.es:i.en,max:DB().stock[i.id]||0}));
+  else if(type==='packing')items=DB().pack.map(p=>({id:p.id,name:pN(p),max:DB().packing[p.id]||0}));
+  else if(type==='bottle')items=[{id:'maracuya',name:'🍹 Maracuyá',max:DB().bottles.maracuya||0},{id:'water',name:`💧 ${t('nat_water')}`,max:DB().bottles.water||0}];
+  else if(type==='commercial')items=DB().comm.map(c=>({id:c.id,name:cN(c),max:DB().commercial[c.id]||0}));
+  document.getElementById('ls-items').innerHTML=
+    `<div class="fg"><label>${LG==='es'?'Ítem':'Item'}</label><select id="ls-item">${items.map(i=>`<option value="${i.id}">${i.name} (${t('avail')}: ${i.max})</option>`).join('')}</select></div>`+
+    `<div class="fg"><label>${LG==='es'?'Cantidad perdida':'Quantity lost'}</label><input type="number" id="ls-qty" min="1" value="1"></div>`;
+}
+async function logLoss(){
+  const type=document.getElementById('ls-type')?.value;
+  const item=document.getElementById('ls-item')?.value;
+  const qty=parseInt(document.getElementById('ls-qty')?.value)||0;
+  const reason=(document.getElementById('ls-reason')?.value||'').trim();
+  if(!item||qty<=0){toast(t('fill_all'));return;}
+  const lt=t('loss_types');let name='';
+  if(type==='bun'){const f=getFillings().find(x=>x.id===item);name=`${f.emoji} ${fN(f)}`;DB().finished[item]=Math.max(0,(DB().finished[item]||0)-qty);}
+  else if(type==='ingredient'){name=iN(item);DB().stock[item]=Math.max(0,(DB().stock[item]||0)-qty);}
+  else if(type==='packing'){const p=DB().pack.find(x=>x.id===item);name=pN(p);DB().packing[item]=Math.max(0,(DB().packing[item]||0)-qty);}
+  else if(type==='bottle'){name=item==='maracuya'?'Maracuyá':t('nat_water');if(item==='maracuya')DB().bottles.maracuya=Math.max(0,(DB().bottles.maracuya||0)-qty);else DB().bottles.water=Math.max(0,(DB().bottles.water||0)-qty);}
+  else if(type==='commercial'){const c=DB().comm.find(x=>x.id===item);name=cN(c);DB().commercial[item]=Math.max(0,(DB().commercial[item]||0)-qty);}
+  addLog('loss',qty,`${lt[type]||type}: ${name} × ${qty}${reason?' — '+reason:''}`);
+  await saveDB();toast(t('loss_ok'));document.getElementById('ls-reason').value='';renderLossTable();
+}
+function renderLossTable(){
+  const losses=[...(DB().log||[])].filter(l=>l.type==='loss').reverse().slice(0,30);
+  const tb=document.getElementById('loss-tbody');
+  if(!losses.length){tb.innerHTML=`<tr><td colspan="5" class="empty">${LG==='es'?'Sin pérdidas':'No losses'}</td></tr>`;return;}
+  tb.innerHTML=losses.map(l=>`
+    <tr>
+      <td style="font-size:11px;color:var(--txm);white-space:nowrap">${fmtDT(l.time)}</td>
+      <td><strong style="font-size:11px">${l.user}</strong></td>
+      <td style="font-size:11px">${l.details.split(':')[1]?.split('×')[0]?.trim()||'-'}</td>
+      <td style="font-weight:600;color:var(--r)">${l.qty}</td>
+      <td style="font-size:11px;color:var(--txm)">${l.details.includes('—')?l.details.split('—')[1]?.trim():'—'}</td>
+    </tr>`).join('');
+}
+
+// ══════════════════════
+// PREP LOSS AUDIT
+// ══════════════════════
+function populateAuditIng(){
+  const sel=document.getElementById('au-ing');if(!sel)return;
+  const prepIngs=DB().ings.filter(i=>PREP_LOSS_INGS.includes(i.id)||i.custom);
+  sel.innerHTML=prepIngs.map(i=>`<option value="${i.id}">${LG==='es'?i.es:i.en}</option>`).join('');
+}
+function calcAudit(){
+  const before=parseFloat(document.getElementById('au-before').value)||0;
+  const after=parseFloat(document.getElementById('au-after').value)||0;
+  if(before<=0||after<0){toast(t('fill_all'));return;}
+  const lost=Math.max(0,before-after);const pct=(lost/before*100).toFixed(1);
+  _auditCalc={before,after,lost,pct:parseFloat(pct)};
+  const res=document.getElementById('au-result');res.style.display='block';
+  res.className='audit-result '+(parseFloat(pct)>30?'warn':'ok');
+  res.textContent=`${LG==='es'?'Pérdida':'Lost'}: ${lost.toFixed(0)}g — ${pct}% ${LG==='es'?'de merma':'prep loss'}`;
+}
+async function logAudit(){
+  if(!_auditCalc){toast(LG==='es'?'Primero calcula':'Calculate first');return;}
+  const ingId=document.getElementById('au-ing')?.value;
+  const dateVal=document.getElementById('au-date')?.value||new Date().toISOString().slice(0,10);
+  if(!ingId){toast(t('fill_all'));return;}
+  const{before,after,lost,pct}=_auditCalc;
+  DB().stock[ingId]=Math.max(0,(DB().stock[ingId]||0)-lost);
+  if(!DB().audits)DB().audits=[];
+  DB().audits.push({id:Date.now(),time:Date.now(),user:CU.name,userId:CU.id,ing:ingId,date:dateVal,before,after,lost,pct});
+  addLog('audit',Math.round(lost),`${LG==='es'?'Auditoría':'Audit'}: ${iN(ingId)} — ${before}g → ${after}g (${lost.toFixed(0)}g / ${pct}%)`);
+  await saveDB();toast(t('audit_ok'));
+  document.getElementById('au-before').value='';document.getElementById('au-after').value='';
+  document.getElementById('au-result').style.display='none';_auditCalc=null;
+  renderAuditHistory();renderAvgGrid();
+}
+function renderAuditHistory(){
+  const audits=[...(DB().audits||[])].reverse().slice(0,40);
+  const tb=document.getElementById('audit-tbody');if(!tb)return;
+  if(!audits.length){tb.innerHTML=`<tr><td colspan="7" class="empty">${LG==='es'?'Sin auditorías':'No audits'}</td></tr>`;return;}
+  tb.innerHTML=audits.map(a=>`
+    <tr>
+      <td style="font-size:11px;color:var(--txm)">${a.date||fmtDT(a.time)}</td>
+      <td><strong style="font-size:11px">${a.user}</strong></td>
+      <td style="font-size:11px">${iN(a.ing)}</td>
+      <td style="font-size:11px">${a.before}g</td>
+      <td style="font-size:11px">${a.after}g</td>
+      <td style="font-size:11px;color:var(--r);font-weight:600">${Math.round(a.lost)}g</td>
+      <td style="font-size:11px;color:var(--am);font-weight:600">${a.pct}%</td>
+    </tr>`).join('');
+}
+function renderAvgGrid(){
+  const el=document.getElementById('avg-grid');if(!el)return;
+  const audits=DB().audits||[];const byIng={};
+  audits.forEach(a=>{if(!byIng[a.ing])byIng[a.ing]=[];byIng[a.ing].push(a.pct);});
+  const entries=Object.entries(byIng);
+  if(!entries.length){el.innerHTML=`<div class="empty">${LG==='es'?'Sin datos todavía. Completa tu primera auditoría.':'No data yet. Complete your first audit.'}</div>`;return;}
+  el.innerHTML=entries.map(([ingId,pcts])=>{
+    const avg=(pcts.reduce((s,p)=>s+p,0)/pcts.length).toFixed(1);const n=pcts.length;
+    const s=parseFloat(avg)>30?'scrit':parseFloat(avg)>15?'slow':'sok';
+    return`<div class="si ${s}"><div class="sdot"></div><div class="siname">${iN(ingId)}</div><div class="siamt">${avg}<span class="siunit">%</span></div><div style="font-size:10px;color:var(--txm);margin-top:3px">${n} ${LG==='es'?'muestras':'samples'}</div><div class="sibar"><div class="sifill" style="width:${Math.min(100,parseFloat(avg)/50*100).toFixed(0)}%"></div></div></div>`;
+  }).join('');
+}
+
+// ══════════════════════
+// SHOPPING
+// ══════════════════════
+function buildShopInputs(){
+  document.getElementById('sh-buns').innerHTML=getFillings().map(f=>`
+    <div class="shi"><span style="font-size:17px">${f.emoji}</span>
+    <div style="flex:1;font-size:11px;font-weight:500">${fN(f)}</div>
+    <input type="number" min="0" value="${ST['b_'+f.id]||0}" id="st-b-${f.id}" oninput="ST['b_${f.id}']=parseInt(this.value)||0"></div>`).join('');
+  const drinks=[{id:'maracuya',emoji:'🍹',name:'Maracuyá'},{id:'water',emoji:'💧',name:t('nat_water')},...DB().comm.map(c=>({id:c.id,emoji:'🥤',name:cN(c)}))];
+  document.getElementById('sh-drinks').innerHTML=drinks.map(d=>`
+    <div class="shi"><span style="font-size:17px">${d.emoji}</span>
+    <div style="flex:1;font-size:11px;font-weight:500">${d.name}</div>
+    <input type="number" min="0" value="${ST['d_'+d.id]||0}" id="st-d-${d.id}" oninput="ST['d_${d.id}']=parseInt(this.value)||0"></div>`).join('');
+  document.getElementById('sh-pack').innerHTML=DB().pack.map(p=>`
+    <div class="shi"><span style="font-size:15px">📦</span>
+    <div style="flex:1;font-size:11px;font-weight:500">${pN(p)}</div>
+    <input type="number" min="0" value="${ST['p_'+p.id]||0}" id="st-p-${p.id}" oninput="ST['p_${p.id}']=parseInt(this.value)||0"></div>`).join('');
+}
+function setQuick(){
+  getFillings().forEach(f=>{ST['b_'+f.id]=10;const el=document.getElementById('st-b-'+f.id);if(el)el.value=10;});
+  ST['d_maracuya']=3;ST['d_water']=6;
+  const em=document.getElementById('st-d-maracuya');if(em)em.value=3;
+  const ew=document.getElementById('st-d-water');if(ew)ew.value=6;
+  DB().comm.forEach(c=>{ST['d_'+c.id]=12;const el=document.getElementById('st-d-'+c.id);if(el)el.value=12;});
+  const pd={antigrease:50,tissues:1,box_sm:10,box_lg:10,logo_stk:100,bag_food:30,bag_drink:30,stk_meat:20,stk_chicken:20,stk_chorizo:20,stk_cheese:20,stk_choc:20};
+  DB().pack.forEach(p=>{const v=pd[p.id]||10;ST['p_'+p.id]=v;const el=document.getElementById('st-p-'+p.id);if(el)el.value=v;});
+  toast(t('bset'));
+}
+function syncST(){
+  getFillings().forEach(f=>{const el=document.getElementById('st-b-'+f.id);if(el)ST['b_'+f.id]=parseInt(el.value)||0;});
+  ['maracuya','water',...DB().comm.map(c=>c.id)].forEach(id=>{const el=document.getElementById('st-d-'+id);if(el)ST['d_'+id]=parseInt(el.value)||0;});
+  DB().pack.forEach(p=>{const el=document.getElementById('st-p-'+p.id);if(el)ST['p_'+p.id]=parseInt(el.value)||0;});
+}
+// IDs considered "dough" ingredients — shown in the DOUGH section
+const DOUGH_IDS=['Potato Dough','Raw Potatoes','Flour','Butter','Eggs'];
+
+function genList(){
+  syncST();
+  // Accumulate all filling ingredient needs
+  const ingN={};
+  getFillings().forEach(f=>{const tgt=ST['b_'+f.id]||0;if(tgt>0)for(const[k,n]of Object.entries(f.ing||{}))ingN[k]=(ingN[k]||0)+(n*tgt);});
+  // Drink ingredients
+  const mTgt=ST['d_maracuya']||0;if(mTgt>0){const bat=Math.ceil(mTgt/3);ingN['Maracuya Pulp']=(ingN['Maracuya Pulp']||0)+(1000*bat);ingN['Sugar']=(ingN['Sugar']||0)+(150*bat);ingN['Water']=(ingN['Water']||0)+(0.45*bat);}
+  const wTgt=ST['d_water']||0;if(wTgt>0)ingN['Water']=(ingN['Water']||0)+(wTgt/2);
+
+  const day=new Date().toLocaleDateString(LG==='es'?'es-BO':'en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  let txt=LG==='es'?`🛒 *CINCO PANES — Lista de Compras*\n📅 ${day}\n`:`🛒 *CINCO PANES — Shopping List*\n📅 ${day}\n`;
+  let any=false;
+
+  // ── DOUGH section (Potato Dough, Raw Potatoes, Flour, Butter, Eggs) ──
+  const doughLines=[];
+  for(const[k,n]of Object.entries(ingN)){
+    if(!DOUGH_IDS.includes(k))continue;
+    const h=DB().stock[k]||0;const diff=n-h;
+    if(diff>0){const ing=DB().ings.find(x=>x.id===k);doughLines.push(`  - ${iN(k)}: ${diff%1===0?diff:diff.toFixed(2)}${ing?.unit||'g'}`);}
+  }
+  // Also include dough ings that appear in the list but have no filling recipe (standalone stock check)
+  DOUGH_IDS.forEach(k=>{if(ingN[k]!==undefined)return;// already handled above
+  });
+  if(doughLines.length){txt+=`\n🥟 ${LG==='es'?'*MASA (Ingredientes para la masa)*':'*DOUGH (Ingredients to prepare the dough)*'}\n`+doughLines.join('\n');any=true;}
+
+  // ── FILLING section (everything else that is not dough, not drinks) ──
+  const fillLines=[];
+  const drinkIngIds=['Maracuya Pulp','Sugar','Water'];
+  for(const[k,n]of Object.entries(ingN)){
+    if(DOUGH_IDS.includes(k)||drinkIngIds.includes(k))continue;
+    const h=DB().stock[k]||0;const diff=n-h;
+    if(diff>0){const ing=DB().ings.find(x=>x.id===k);fillLines.push(`  - ${iN(k)}: ${diff%1===0?diff:diff.toFixed(2)}${ing?.unit||'g'}`);}
+  }
+  if(fillLines.length){txt+=`\n\n🥩 ${LG==='es'?'*RELLENOS (Ingredientes para los rellenos)*':'*FILLINGS (Ingredients for the fillings)*'}\n`+fillLines.join('\n');any=true;}
+
+  // ── DRINKS section ──
+  const drinkLines=[];
+  // In-house drink ingredients (Maracuya Pulp, Sugar, Water)
+  drinkIngIds.forEach(k=>{
+    const n=ingN[k];if(!n)return;
+    const h=DB().stock[k]||0;const diff=n-h;
+    if(diff>0){const ing=DB().ings.find(x=>x.id===k);drinkLines.push(`  - ${iN(k)}: ${diff%1===0?diff:diff.toFixed(2)}${ing?.unit||'g'}`);}
+  });
+  // Commercial drinks
+  DB().comm.forEach(c=>{const tgt=ST['d_'+c.id]||0;const h=DB().commercial[c.id]||0;if(tgt-h>0)drinkLines.push(`  - ${cN(c)}: ${tgt-h} ${t('units')}`);});
+  if(drinkLines.length){txt+=`\n\n🥤 ${LG==='es'?'*BEBIDAS*':'*DRINKS*'}\n`+drinkLines.join('\n');any=true;}
+
+  // ── PACKING section ──
+  const botStk=(ST['d_maracuya']||0)+(ST['d_water']||0);
+  const pLines=[];
+  DB().pack.forEach(p=>{let tgt=ST['p_'+p.id]||0;if(p.id==='logo_stk')tgt=Math.max(tgt,botStk);const h=DB().packing[p.id]||0;if(Math.ceil(tgt-h)>0)pLines.push(`  - ${pN(p)}: ${Math.ceil(tgt-h)} ${p.unit}`);});
+  if(pLines.length){txt+=`\n\n📦 ${LG==='es'?'*EMPAQUE*':'*PACKING*'}\n`+pLines.join('\n');any=true;}
+
+  txt+=`\n\n_${LG==='es'?'Generado por Cinco Panes':'Generated by Cinco Panes'}_`;
+  lastList=txt;
+  const rc=document.getElementById('sh-rc');rc.style.display='block';
+  document.getElementById('sh-res').innerHTML=any?`<div class="shopres">${txt.replace(/\*/g,'').replace(/\n/g,'<br>')}</div>`:`<div class="empty">${t('shop_none')}</div>`;
+  document.getElementById('sh-c').style.display=any?'inline-flex':'none';
+  rc.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function copyList(){
+  if(!lastList)return;
+  navigator.clipboard.writeText(lastList).then(()=>toast(LG==='es'?'¡Copiado!':'Copied!')).catch(()=>{const ta=document.createElement('textarea');ta.value=lastList;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!');});
+}
+
+// ══════════════════════
+// LOG
+// ══════════════════════
+function populateLogFilter(){
+  const sel=document.getElementById('log-fu');if(!sel)return;
+  sel.innerHTML=`<option value="">All Users</option>`+(DB().users||[]).map(u=>`<option value="${u.name}">${u.name}</option>`).join('');
+}
+function renderLog(){
+  const fu=document.getElementById('log-fu')?.value||'';
+  const ft=document.getElementById('log-ft')?.value||'';
+  let fl=[...(DB().log||[])].reverse();
+  if(fu)fl=fl.filter(l=>l.user===fu);
+  if(ft)fl=fl.filter(l=>l.type===ft);
+  const tb=document.getElementById('log-tbody');
+  if(!fl.length){tb.innerHTML=`<tr><td colspan="4" class="empty">${LG==='es'?'Sin actividad':'No activity'}</td></tr>`;return;}
+  tb.innerHTML=fl.slice(0,200).map(l=>`
+    <tr>
+      <td style="color:var(--txm);font-size:11px;white-space:nowrap">${fmtDT(l.time)}</td>
+      <td><strong style="font-size:11px">${l.user}</strong></td>
+      <td><span class="tag t${l.type==='production'?'prod':l.type==='sale'?'sale':l.type==='drinks'?'drink':l.type==='audit'?'audit':l.type==='loss'?'loss':'stock'}">${l.type}</span></td>
+      <td style="font-size:11px">${l.details}</td>
+    </tr>`).join('');
+}
+
+// ══════════════════════
+// USERS
+// ══════════════════════
+function renderUsers(){
+  document.getElementById('mk-in').value=DB().master_key||'';
+  document.getElementById('users-card').innerHTML=
+    `<div class="ct"><div class="ci">👥</div>${t('us-t')}</div>`+
+    (DB().users||[]).map(u=>`
+      <div class="urow">
+        <div class="tav" style="background:${u.role==='owner'?'var(--gold)':u.role==='manager'?'#2D6A4F':'#888'};color:${u.role==='owner'?'var(--brown)':'#fff'}">${u.name.charAt(0)}</div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:500">${u.name} ${u.id==='jefe'?'👑':''} ${!u.active?`<span style="font-size:10px;color:var(--txm)">(inactive)</span>`:''}</div>
+          <div style="font-size:11px;color:var(--txm);margin-top:2px">@${u.username} · <span class="trole r${u.role==='owner'?'o':u.role==='manager'?'m':'w'}" style="font-size:10px;padding:1px 6px">${t('r'+(u.role==='owner'?'o':u.role==='manager'?'m':'w'))}</span></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${u.id!=='jefe'&&CU.role==='owner'?`<button class="btn bo bsm" onclick="openReset('${u.id}','${u.name}')">Reset</button>`:''}
+          ${u.id!=='jefe'&&CU.role==='owner'?`<button class="btn ${u.active?'bd2':'bo'} bsm" onclick="toggleUser('${u.id}')">${u.active?t('deact'):t('act')}</button>`:''}
+        </div>
+      </div>`).join('');
+}
+function openUserModal(){if(CU.role!=='owner'){toast('Owner only');return;}om('m-user');}
+async function saveUser(){
+  if(CU.role!=='owner')return;
+  const name=document.getElementById('mu-name').value.trim();
+  const uname=document.getElementById('mu-user').value.trim().toLowerCase();
+  const pass=document.getElementById('mu-pass').value;
+  const role=document.getElementById('mu-role').value;
+  if(!name||!uname||!pass){toast(t('fill_all'));return;}
+  if(DB().users.find(u=>u.username===uname)){toast(t('uex'));return;}
+  if(DB().users.filter(u=>u.role==='worker').length>=5){toast(t('maxw'));return;}
+  DB().users.push({id:'w'+Date.now(),name,username:uname,password:pass,role,lang:'es',active:true});
+  await saveDB();cm('m-user');renderUsers();populateLogFilter();toast(`${t('ucr')}: ${name}`);
+}
+function openReset(id,name){document.getElementById('mr-nm').textContent=name;document.getElementById('mr-uid').value=id;document.getElementById('mr-pass').value='';om('m-reset');}
+async function doReset(){
+  const id=document.getElementById('mr-uid').value;const pass=document.getElementById('mr-pass').value;
+  if(!pass){toast(t('fill_all'));return;}
+  const u=DB().users.find(x=>x.id===id);if(u)u.password=pass;
+  await saveDB();cm('m-reset');toast(t('pwr'));
+}
+async function toggleUser(id){
+  const u=DB().users.find(x=>x.id===id);if(u)u.active=!u.active;
+  await saveDB();renderUsers();toast(u?.active?t('act'):t('deact'));
+}
+async function saveMK(){const k=document.getElementById('mk-in').value;if(!k){toast(t('fill_all'));return;}DB().master_key=k;await saveDB();toast(t('mks'));}
+function toggleMK(){const i=document.getElementById('mk-in');i.type=i.type==='password'?'text':'password';}
+
+// ══════════════════════
+// ══════════════════════
+// INSTRUCTIONS / TASKS
+// ══════════════════════
+let _taskRows=[];
+
+function tasksTab(id,btn){qT('pg-tasks',btn);document.getElementById('ttbc-'+id).classList.add('act');if(id==='today')renderTodayTasks();if(id==='archive')initArchive();if(id==='send')initSendForm();}
+
+function renderTasks(){renderTodayTasks();}
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+
+function renderTodayTasks(){
+  const box=document.getElementById('tasks-today-box');if(!box)return;
+  const instr=DB().instructions||[];
+  const today=todayStr();
+  let mine=[];
+  if(CU.role==='worker'){
+    mine=instr.filter(x=>x.workerId===CU.id&&x.date===today);
+  } else {
+    // manager/owner sees all workers' today instructions
+    mine=instr.filter(x=>x.date===today);
+  }
+  if(!mine.length){box.innerHTML=`<div class="card"><div class="empty">${t('tasks_none')}</div></div>`;return;}
+  box.innerHTML=mine.map(ins=>renderInstructionCard(ins,true)).join('');
+}
+
+function renderInstructionCard(ins,allowMark=false){
+  const worker=DB().users.find(u=>u.id===ins.workerId);
+  const wname=worker?worker.name:'?';
+  const isOwner=CU.role==='owner'||CU.role==='manager';
+  const tasks=ins.tasks||[];
+  const done=tasks.filter(t=>t.doneAt).length;
+  const total=tasks.length;
+  const pct=total?Math.round(done/total*100):0;
+  return`<div class="card" style="margin-bottom:11px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--brown)">${isOwner?`👤 ${wname} — `:''}📌 ${ins.date}</div>
+        <div style="font-size:11px;color:var(--txm);margin-top:2px">${LG==='es'?'Enviado por':'Sent by'} ${ins.sentBy} · ${fmtT(ins.sentAt)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;font-weight:600;color:${pct===100?'var(--g)':'var(--am)'}">${done}/${total} ${LG==='es'?'completadas':'done'}</div>
+        <div style="height:4px;width:80px;background:var(--cream-d);border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${pct===100?'var(--g)':'var(--gold)'};border-radius:2px;transition:width .4s"></div></div>
+      </div>
+    </div>
+    ${ins.note?`<div style="background:var(--gold-p);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--brown);margin-bottom:10px;border:1px solid rgba(200,146,42,.18)">📝 ${ins.note}</div>`:''}
+    <div>${tasks.map((tk,i)=>`
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+        ${allowMark&&CU.role==='worker'?`<button onclick="markTask('${ins.id}',${i})" style="flex-shrink:0;width:22px;height:22px;border-radius:6px;border:2px solid ${tk.doneAt?'var(--g)':'var(--bd)'};background:${tk.doneAt?'var(--g)':'#fff'};cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px">${tk.doneAt?'✓':''}</button>`:`<div style="flex-shrink:0;width:22px;height:22px;border-radius:6px;border:2px solid ${tk.doneAt?'var(--g)':'var(--bd)'};background:${tk.doneAt?'var(--g)':'#fff'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px">${tk.doneAt?'✓':''}</div>`}
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:500;${tk.doneAt?'text-decoration:line-through;color:var(--txm)':''}">${tk.text}</div>
+          ${tk.doneAt?`<div style="font-size:10px;color:var(--g);margin-top:2px">✓ ${LG==='es'?'Hecho a las':'Done at'} ${fmtT(tk.doneAt)}</div>`:''}
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+async function markTask(insId,taskIdx){
+  const instr=DB().instructions||[];
+  const ins=instr.find(x=>x.id===insId);
+  if(!ins)return;
+  const tk=ins.tasks[taskIdx];if(!tk)return;
+  if(tk.doneAt){tk.doneAt=null;} // allow toggle off
+  else{tk.doneAt=Date.now();}
+  await saveDB();renderTodayTasks();
+}
+
+function initArchive(){
+  const sel=document.getElementById('arch-user');
+  if(!sel)return;
+  const workers=DB().users.filter(u=>u.role==='worker'||u.role==='manager');
+  sel.innerHTML=`<option value="">${LG==='es'?'Todos':'All Workers'}</option>`+workers.map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
+  const dateEl=document.getElementById('arch-date');
+  if(dateEl&&!dateEl.value)dateEl.value=todayStr();
+  renderArchive();
+}
+
+function renderArchive(){
+  const userId=document.getElementById('arch-user')?.value||'';
+  const date=document.getElementById('arch-date')?.value||todayStr();
+  const instr=DB().instructions||[];
+  let filtered=instr.filter(x=>x.date===date);
+  if(userId)filtered=filtered.filter(x=>x.workerId===userId);
+  // workers can only see their own archive
+  if(CU.role==='worker')filtered=filtered.filter(x=>x.workerId===CU.id);
+  const box=document.getElementById('arch-box');if(!box)return;
+  if(!filtered.length){box.innerHTML=`<div class="empty">${t('arch_none')}</div>`;return;}
+  box.innerHTML=filtered.map(ins=>renderInstructionCard(ins,false)).join('');
+}
+
+function initSendForm(){
+  const sel=document.getElementById('send-worker');if(!sel)return;
+  const workers=DB().users.filter(u=>u.active&&u.role==='worker');
+  sel.innerHTML=workers.map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
+  const dateEl=document.getElementById('send-date');
+  if(dateEl)dateEl.value=todayStr();
+  document.getElementById('send-note').value='';
+  _taskRows=[];
+  document.getElementById('task-builder').innerHTML='';
+  addTaskRow();
+}
+
+function addTaskRow(){
+  const id='tr_'+Date.now();
+  _taskRows.push(id);
+  const div=document.createElement('div');
+  div.id=id;
+  div.style.cssText='display:flex;align-items:center;gap:7px;margin-bottom:7px';
+  div.innerHTML=`<input type="text" placeholder="${t('task_placeholder')}" style="flex:1;padding:8px 11px;border:1px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;background:#fff;" id="ti-${id}">
+  <button onclick="removeTaskRow('${id}')" style="flex-shrink:0;width:28px;height:28px;border-radius:7px;background:var(--rl);border:1px solid rgba(166,50,40,.18);color:var(--r);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">×</button>`;
+  document.getElementById('task-builder').appendChild(div);
+}
+
+function removeTaskRow(id){
+  _taskRows=_taskRows.filter(r=>r!==id);
+  document.getElementById(id)?.remove();
+}
+
+async function sendInstructions(){
+  const workerId=document.getElementById('send-worker')?.value;
+  const date=document.getElementById('send-date')?.value||todayStr();
+  const note=(document.getElementById('send-note')?.value||'').trim();
+  if(!workerId){toast(t('tasks_no_worker'));return;}
+  const tasks=_taskRows.map(id=>{
+    const val=(document.getElementById('ti-'+id)?.value||'').trim();
+    return val?{text:val,doneAt:null}:null;
+  }).filter(Boolean);
+  if(!tasks.length){toast(t('tasks_fill'));return;}
+  if(!DB().instructions)DB().instructions=[];
+  // Remove existing instruction for same worker+date and replace
+  DB().instructions=DB().instructions.filter(x=>!(x.workerId===workerId&&x.date===date));
+  DB().instructions.push({
+    id:'ins_'+Date.now(),
+    workerId,date,note,tasks,
+    sentBy:CU.name,sentAt:Date.now()
+  });
+  // Keep only last 90 days of instructions
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-90);
+  const cutoffStr=cutoff.toISOString().slice(0,10);
+  DB().instructions=DB().instructions.filter(x=>x.date>=cutoffStr);
+  await saveDB();
+  toast(t('tasks_sent'));
+  document.getElementById('send-note').value='';
+  _taskRows=[];document.getElementById('task-builder').innerHTML='';addTaskRow();
+}
+
+// MODALS & TOAST
+// ══════════════════════
+function om(id){document.getElementById(id).style.display='flex';}
+function cm(id){document.getElementById(id).style.display='none';}
+document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.style.display='none';}));
+function toast(msg){const el=document.getElementById('toast-el');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2800);}
+</script>
+</body>
+</html>
